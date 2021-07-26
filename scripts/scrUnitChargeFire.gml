@@ -16,7 +16,7 @@ if (reloadTimeInt < reloadTimeTar) {
     reloadTimeInt = 0;
     
     // Shotgun Blast
-    if (unitType == "Bomber") {
+    if (unitType == "bomber") {
         repeat(4) {
             scrCreateBullet(teamIndex, x, y, unitAngle, 32, 4, 
                             0.2, sBulletRound, sBulletDecay, -1, true);

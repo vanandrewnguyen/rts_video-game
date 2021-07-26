@@ -17,8 +17,14 @@ if (instance_exists(moveTarget)) {
         state = "attack";
         atTarget = true;
         firingTarget = moveTarget;
-    } else if (dis > chaseRange) {
-        scrEnemyResetIdle();
+    } else {
+        var tempRange = 0;
+        if (inCombat == true) {
+            tempRange = chaseRange*2;
+        } else {
+            tempRange = chaseRange;
+        }
+        if (dis > tempRange) { scrEnemyResetIdle(); }
     }
 } else {
     scrEnemyResetIdle();

@@ -8,6 +8,31 @@
   <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
   <events>
+    <event eventtype="2" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>///Toggle Stun
+
+stunned = !stunned;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
     <event eventtype="4" ename="oEntityParent">
       <action>
         <libid>1</libid>
@@ -27,14 +52,18 @@
             <kind>1</kind>
             <string>///Self collision
 
-// Push away from other ship
-var dir = point_direction(other.x, other.y, x, y);
-hsp += lengthdir_x((acc*2)/weight, dir);
-vsp += lengthdir_y((acc*2)/weight, dir);
+if (global.timeflow == 1) {
 
-// Check if ships are stuck
-if (x == other.x &amp;&amp; y == other.y) {
-    if (id &gt; other.id) { x += 1; } else { x -= 1; }
+    // Push away from other ship
+    var dir = point_direction(other.x, other.y, x, y);
+    hsp += lengthdir_x((acc*2)/weight, dir);
+    vsp += lengthdir_y((acc*2)/weight, dir);
+    
+    // Check if ships are stuck
+    if (x == other.x &amp;&amp; y == other.y) {
+        if (id &gt; other.id) { x += 1; } else { x -= 1; }
+    }
+
 }
 </string>
           </argument>

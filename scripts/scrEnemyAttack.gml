@@ -23,7 +23,13 @@ if (instance_exists(firingTarget)) {
     unitAngle = dir;
     
     // Firing
-    scrUnitChargeFire();
+    switch(unitType) {
+        case "bomber": 
+            scrEnemyChargeLoad(); 
+        break;
+        default: scrUnitChargeFire(); 
+    } 
+    
 } else {
     scrEnemyResetIdle();
 }

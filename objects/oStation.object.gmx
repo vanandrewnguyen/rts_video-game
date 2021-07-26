@@ -32,14 +32,14 @@ state = "idle";
 unitType = "station";
 selected = false;
 teamIndex = PLAYERINDEX;
-scrInitFactoryData();
 
 // Health Variables
 hp = 25;
 maxHp = hp;
 
 // Factory Variables
-
+scrInitFactoryData();
+scrInitShipData();
 
 // Draw Variables
 xScale = 1;
@@ -93,8 +93,6 @@ if (mouse_check_button_pressed(mb_left)) {
             // Buy the selected item
             if (global.currency &gt;= factoryBuildIndex[factoryAnimTar, 1]) {
                 scrFactoryPurchaseItem();
-                // Subtract the fees
-                global.currency -= factoryBuildIndex[factoryAnimTar, 1];
             } else {
                 scrCreateFlashingText("Not enough funds", x, y - 32, 
                                       c_white, global.colDarkPink);
@@ -107,6 +105,16 @@ if (mouse_check_button_pressed(mb_left)) {
     }
 }
 
+// Update Stats
+currentShipHpTar = shipData[factoryAnimTar, 0];
+currentShipDmgTar = shipData[factoryAnimTar, 1];
+currentShipSpdTar = shipData[factoryAnimTar, 2];
+currentShipReloadTar = maxShipReload - shipData[factoryAnimTar, 3];
+
+currentShipHp = lerp(currentShipHp, currentShipHpTar, 0.1);
+currentShipDmg = lerp(currentShipDmg, currentShipDmgTar, 0.1);
+currentShipSpd = lerp(currentShipSpd, currentShipSpdTar, 0.1);
+currentShipReload = lerp(currentShipReload, currentShipReloadTar, 0.1);
 
 
 
@@ -169,7 +177,7 @@ if (global.timeflow == 1) {
     bottomRot += -1;
 }
 
-// Deploy Menu 
+// Deploy Menu RHS
 draw_set_font(fntSma);
 if (state == "selected") {
     // Set Input for Animation
@@ -211,7 +219,55 @@ if (state == "selected") {
         //draw_text(xx + 32, yy, factoryBuildIndex[i,0]);
     }
 }
+
+// Deploy Menu LHS
+if (state == "selected") {
+    var leftGap = 40;
+    var upGap = 20;
+    var width = 48;
+    var height = 4;
+    var heightGap = 12;
+    
+    // Sprites
+    draw_sprite(sShipStatsIcon, 0, x - leftGap + 8, y - upGap + height/2);
+    draw_sprite(sShipStatsIcon, 1, x - leftGap + 8, y - upGap + heightGap + height/2);
+    draw_sprite(sShipStatsIcon, 2, x - leftGap + 8, y - upGap + heightGap*2 + height/2);
+    draw_sprite(sShipStatsIcon, 3, x - leftGap + 8, y - upGap + heightGap*3 + height/2);
+    
+    // Bars
+    draw_set_colour(c_white);
+    var pc1 = (currentShipHp / maxShipHp) * 100;
+    draw_healthbar(x - leftGap, y - upGap, 
+                   x - leftGap - width, y - upGap + height, pc1,
+                   c_white, c_white, c_white, 0, false, false);
+    
+    draw_set_colour(global.colSatLightBlue);
+    var pc2 = (currentShipSpd / maxShipSpd) * 100;
+    draw_healthbar(x - leftGap, y - upGap + heightGap, 
+                   x - leftGap - width, y - upGap + height + heightGap, pc2,
+                   c_white, global.colSatLightBlue, global.colSatLightBlue, 0, false, true);
+                   
+    draw_set_colour(global.colLightPink);
+    var pc3 = (currentShipDmg / maxShipDmg) * 100;
+    draw_healthbar(x - leftGap, y - upGap + heightGap*2, 
+                   x - leftGap - width, y - upGap + height + heightGap*2, pc3,
+                   c_white, global.colLightPink, global.colLightPink, 0, false, false);
+                   
+    draw_set_colour(global.colLightOrange);
+    var pc4 = (currentShipReload / maxShipReload) * 100;
+    draw_healthbar(x - leftGap, y - upGap + heightGap*3, 
+                   x - leftGap - width, y - upGap + height + heightGap*3, pc4,
+                   c_white, global.colLightOrange, global.colLightOrange, 0, false, false);
+                   
+}
+
 draw_set_colour(c_white);
+
+
+
+
+
+
 
 
 

@@ -28,7 +28,7 @@
             <string>///Init
 event_inherited();
 
-scrUnitInit(PLAYERINDEX, 3, 2, 0.25, 0.15, 2,
+scrUnitInit(PLAYERINDEX, 3, 1.8, 0.25, 0.15, 2,
             96, 60, 16, 8, 1, sBullet, true, "infantry");
 </string>
           </argument>

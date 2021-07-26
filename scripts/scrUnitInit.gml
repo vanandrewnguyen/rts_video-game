@@ -52,6 +52,7 @@ bulletSpd = _bSpd;
 bulletDmg = _bDmg;
 bulletSprite = _bSprite;
 bulletTrail = _bTrail;
+stunned = false;
 
 // Drawing Variables
 drawAngle = random(360);
@@ -61,4 +62,6 @@ yScale = 1;
 alpha = 1;
 hpBarAlpha = 0;
 hpBarAlphaTar = 0;
+t = 0;
+
 

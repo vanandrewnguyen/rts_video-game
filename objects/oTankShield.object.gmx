@@ -3,10 +3,10 @@
   <spriteName>&lt;undefined&gt;</spriteName>
   <solid>0</solid>
   <visible>-1</visible>
-  <depth>-1</depth>
+  <depth>1</depth>
   <persistent>0</persistent>
   <parentName>&lt;undefined&gt;</parentName>
-  <maskName>&lt;undefined&gt;</maskName>
+  <maskName>sShipMaskSmall</maskName>
   <events>
     <event eventtype="0" enumb="0">
       <action>
@@ -27,32 +27,41 @@
             <kind>1</kind>
             <string>///Init
 
-// Cam Variables
-camX = 0;
-camY = 0;
-camMaxSpd = 4;
-camIndex = 0;
-camBuffer = 64;
-camLock = false;
+owner = -1;
 
-// Zooming Variables
-camZoomBase = 320;
-camZoomMin = 256;
-camZoomMax = 1280//640;
-camZoomLerp = 0.1;
-
-// Framing Variables
-camFrameWidth = camZoomBase;
-camFrameHeight = camZoomBase/16*9;
-
-// Speed Variables
-hsp = 0;
-vsp = 0;
-camAcc = 1;
-
-// Shake Variables
-mag = 0;
-magLerp = 0.2;
+t = 0;
+radius = 0;
+radiusRate = 0;
+radiusOrigin = 32;
+radiusTar = radiusOrigin;
+active = true;
+alpha = 0;
+alphaTar = 0.5;
+damageThreshold = 1;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="2" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>///Toggle
+active = !active;
 </string>
           </argument>
         </arguments>
@@ -75,35 +84,47 @@ magLerp = 0.2;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>///Move
-scrMoveCam();
-camFrameHeight = (camFrameWidth/16)*9;
+            <string>///Follow
+t++;
+if (instance_exists(owner)) {
+    x = owner.x;
+    y = owner.y;
+} else { instance_destroy(); }
 
-// Zooming the camera frame
-camMaxSpd = view_wview[camIndex]/75;
-if (!camLock) {
-    if (mouse_wheel_up()) { scrZoomCam(-0.1,camIndex); }
-    if (mouse_wheel_down()) { scrZoomCam(0.1,camIndex); }
+if (active) { 
+    alphaTar = 0.1  + 0.025*sin(t/48); 
+    radiusTar = radiusOrigin + 2*sin(t/32); 
+    if (instance_exists(owner)) {
+        // Heal itself
+        if (owner.hp &lt; owner.maxHp &amp;&amp; global.timeflow == 1) {
+            owner.hp += 0.01;
+        }
+    }
+} else { alphaTar = 0; radiusTar = radiusOrigin/2; }
+
+// Take the hit
+if (instance_exists(oBullet) &amp;&amp; instance_exists(owner)) {
+    var inst = instance_nearest(x, y, oBullet);
+    var dis = point_distance(x, y, inst.x, inst.y);
+    if (instance_exists(inst)) {
+        if (dis &lt;= radius &amp;&amp; inst.team != owner.teamIndex) {
+            active = false;
+            alarm[0] = 60;
+            repeat(random_range(2, 4)) {
+                part_particles_create(global.pSysBelow, 
+                                      inst.x + random_range(-8, 8), 
+                                      inst.y + random_range(-8, 8), 
+                                      global.partShipEnemyTrail, 1);
+            }
+            
+            if (inst.dmg &lt;= damageThreshold) {
+                with(inst) { 
+                    instance_destroy(); 
+                }
+            }  
+        } 
+    }
 }
-
-// Approach the intended view frame
-view_wview[camIndex] = lerp(view_wview[camIndex], camFrameWidth, camZoomLerp);
-view_hview[camIndex] = lerp(view_hview[camIndex], (camFrameWidth/16)*9, camZoomLerp);
-
-// Parallax Background (lower number = faster background)
-var renderDis1 = 32;
-var renderDis2 = 15;
-var renderDis3 = 10;
-background_alpha[1] = 0.75;
-background_alpha[2] = 0.25;
-background_alpha[3] = 0.5;
-background_x[1] = round(view_xview/renderDis1 - hsp);
-background_x[2] = round(view_xview/renderDis2 - hsp);
-background_x[3] = round(view_xview/renderDis3 - hsp);
-background_y[1] = round(view_yview/renderDis1 - vsp);
-background_y[2] = round(view_yview/renderDis2 - vsp);
-background_y[3] = round(view_yview/renderDis3 - vsp);
-
 </string>
           </argument>
         </arguments>
@@ -128,13 +149,18 @@ background_y[3] = round(view_yview/renderDis3 - vsp);
             <kind>1</kind>
             <string>///Draw
 
-if (global.timeflow == 0) {
-    draw_set_alpha(0.25);
-    draw_set_colour(global.colDarkestBlue);
-    draw_rectangle(view_xview, view_yview, 
-                   view_xview + view_wview, view_yview + view_hview, false);
-    draw_set_alpha(1);
-}
+alpha = lerp(alpha, alphaTar, 0.1);
+var spd = 0.5;
+var inertia = 0.5; //0 is no inertia, 1 is no movement
+radiusRate = lerp((radiusTar - radius), spd, inertia)-0.5*radiusRate;
+radius += radiusRate;
+
+draw_set_alpha(alpha);
+draw_set_colour(c_white);
+draw_circle(x, y, radius, false);
+draw_set_alpha(alpha*1.5);
+draw_circle(x, y, radius, true);
+draw_set_alpha(1);
 </string>
           </argument>
         </arguments>

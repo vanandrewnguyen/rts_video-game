@@ -103,8 +103,6 @@ if (mouse_check_button_pressed(mb_left)) {
     py = mouse_y;
     with(oUnitParent) { selected = false; }
     
-    //scrCreateBullet(ENEMYINDEX,mouse_x,mouse_y,0,8,6,1,sBullet,sBulletDecay,-1,true);
-    //scrCreateCasing(mouse_x,mouse_y,-30,30,2,4);
 }
 if (mouse_check_button_released(mb_left)) {
     // Reset Coord for px / py
@@ -119,7 +117,11 @@ if (keyboard_check_pressed(ord("3"))) { mouseMode = "targetCircle"; }
 if (keyboard_check_pressed(ord("4"))) { mouseMode = "targetUnit"; }
 if (keyboard_check_pressed(ord("5"))) { mouseMode = "selfDestruct"; }
 
+// Debug
 
+if (mouse_check_button_pressed(mb_middle)) {
+    //scrCreateBullet(PLAYERINDEX,mouse_x,mouse_y,0,8,6,1,sBullet,sBulletDecay,-1,true);
+}   
 
 
 

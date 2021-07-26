@@ -9,7 +9,7 @@ if (!atTarget) {
     
     // Destroy target once reached
     var dis = point_distance(x, y, moveTargetX, moveTargetY);
-    if (dis < sprite_width/4) {
+    if (dis < sprite_width/2) {
         state = "idle";
         atTarget = true;
     }

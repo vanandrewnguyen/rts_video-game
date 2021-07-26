@@ -4,7 +4,7 @@
   <solid>0</solid>
   <visible>-1</visible>
   <depth>0</depth>
-  <persistent>0</persistent>
+  <persistent>-1</persistent>
   <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
   <events>
@@ -30,12 +30,7 @@
 global.GUIWidth = 320*2;
 global.GUIHeight = 180*2;
 global.currency = 1000;
-
-// Create control objects
-instance_create(0, 0, oTimeCont);
-instance_create(0, 0, oCamera);
-instance_create(0, 0, oMouse);
-instance_create(0, 0, oPartSys);
+global.enemyCurrency = 1000;
 
 // Drawing variables
 display_set_gui_size(global.GUIWidth, global.GUIHeight);
@@ -90,6 +85,38 @@ if (keyboard_check_pressed(ord("R"))) {
         </arguments>
       </action>
     </event>
+    <event eventtype="7" enumb="4">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>///Create control objects
+instance_create(0, 0, oTimeCont);
+instance_create(0, 0, oCamera);
+instance_create(0, 0, oMouse);
+instance_create(0, 0, oPartSys);
+instance_create(0, 0, oEnemyCont);
+
+switch(room) {
+    case rmInit: room_goto_next(); break;
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
     <event eventtype="8" enumb="64">
       <action>
         <libid>1</libid>
@@ -112,6 +139,17 @@ if (keyboard_check_pressed(ord("R"))) {
 draw_set_colour(c_white);
 draw_set_font(fntMed);
 draw_text(16, 16, "Currency: " + string(global.currency)); 
+draw_text(16, 32, "AI-Currency: " + string(global.enemyCurrency)); 
+
+if (global.timeflow == 0) {
+    draw_set_colour(c_white);
+    draw_set_font(fntBig);
+    draw_set_halign(fa_center);
+    draw_set_valign(fa_middle);
+    draw_text(global.GUIWidth / 2, global.GUIHeight / 2 - 64, "Game Paused");
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+}
 </string>
           </argument>
         </arguments>

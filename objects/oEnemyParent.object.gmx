@@ -34,6 +34,9 @@ scrUnitInit(ENEMYINDEX, 3, 2, 0.25, 0.15, 2,
 // Enemy Variables
 chaseRange = 160;
 attackRange = 96;
+loadTime = 120;
+loadInt = 0;
+
 </string>
           </argument>
         </arguments>
@@ -62,6 +65,13 @@ attackRange = 96;
 scrShakeCam(2);
 scrCreateExplosion(x, y, sExplosionSquareBig, false, 
                    irandom_range(2,3), 32, 32, sExplosionSquareBig);
+scrCreateShipGib(x, y, 0.8, 0.05, 8, random_range(1,4), 0, 360); 
+
+if (unitType == "Kamikaze") {
+    scrCreateExplosion(x, y, sExplosionColour, false, 0, 0, 0, 0);
+}       
+
+
 </string>
           </argument>
         </arguments>
@@ -87,22 +97,31 @@ scrCreateExplosion(x, y, sExplosionSquareBig, false,
             <string>///Move
 
 // Use finite state machine
-if (global.timeflow == 1) {
-    switch(state) {
-        case "idle":
-            scrEnemyIdle();
-        break;
-        case "chase":
-            scrEnemyChase();
-        break;
-        case "attack":
-            scrEnemyAttack();
-        break;
-    }   
-    x += hsp; 
-    y += vsp; 
+if (loadInt &lt; loadTime) {
+    loadInt++;
+} else {
+    // Check for load time and time flow
+    if (global.timeflow == 1 &amp;&amp; !stunned) {
+        switch(state) {
+            case "idle":
+                scrEnemyIdle();
+            break;
+            case "chase":
+                scrEnemyChase();
+            break;
+            case "attack":
+                scrEnemyAttack();
+            break;
+            case "charge":
+                scrEnemyCharge();
+            break;
+        }   
+        x += hsp; 
+        y += vsp; 
+    }
 }
 
+// Toggle Select
 if (mouse_check_button(mb_left)) {
     scrToggleSelect(oMouse.px, oMouse.py, mouse_x, mouse_y);
 }
@@ -110,6 +129,21 @@ if (mouse_check_button(mb_left)) {
 // Clamp within room bounds
 x = clamp(x, 0, room_width); 
 y = clamp(y, 0, room_height); 
+
+// AI
+switch(unitType) {
+    case "Kamikaze":
+        if (global.difficulty &gt;= 2) {
+            scrEnemyAvoidBullet();
+        }
+    break;
+    case "Sniper":
+        scrEnemyAvoidPlayerShip();
+        if (global.difficulty &gt;= 3) {
+            scrEnemyAvoidBullet();
+        }
+    break;
+}
 
 // Damage
 scrUnitTakeDamage();
@@ -192,6 +226,12 @@ if (inCombat == true || selected == true) {
     draw_set_alpha(1);
 } else { hpBarAlphaTar = 0; }
 
+if (stunned) {
+    t++;
+    draw_sprite(sStunEffect, t/2, x, y - 16);
+}
+
+//draw_text(x, y -32, state);
 
 
 </string>
