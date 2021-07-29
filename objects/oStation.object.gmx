@@ -85,6 +85,8 @@ switch(state) {
         scrStationBuild();
     break;
 }   
+scrUnitTakeDamage();
+scrReturnSquish(1, 0.1);
 
 // Select
 if (mouse_check_button_pressed(mb_left)) {
@@ -104,6 +106,7 @@ if (mouse_check_button_pressed(mb_left)) {
         state = "idle";
     }
 }
+
 
 // Update Stats
 currentShipHpTar = shipData[factoryAnimTar, 0];

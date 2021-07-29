@@ -82,81 +82,85 @@ if (loadInt &lt; loadTime) {
     }
 }
 
-// If time is not frozen
-if (global.timeflow == 1) {
-    switch(state) {
-        case "idle":
-            scrUnitIdle();
-            if (idleDelayInt &lt; idleDelayTarget) {
-                idleDelayInt++;
-            } else { 
-                // Goto nearest mine -&gt; here you make decisions based on clusters
-                state = "findingMine"; 
+if (instance_exists(oStationEnemy)) { 
+
+    // If time is not frozen
+    if (global.timeflow == 1) {
+        switch(state) {
+            case "idle":
+                scrUnitIdle();
+                if (idleDelayInt &lt; idleDelayTarget) {
+                    idleDelayInt++;
+                } else { 
+                    // Goto nearest mine -&gt; here you make decisions based on clusters
+                    state = "findingMine"; 
+                    var inst = instance_nearest(x, y, oMiningPoint);
+                    mineX = inst.x;
+                    mineY = inst.y;
+                }
+            break;
+            case "move":
+                scrUnitMove();
+            break;
+            case "findingMine":
+                scrUnitMove();
+                //if (workerMiningInt &gt;= workerMiningTarget) { state = "return"; exit; }
+                if (instance_exists(oMiningPoint)) {
+                    var dis = point_distance(x, y, mineX, mineY);
+                    if (dis &gt; sprite_width/2) {
+                        atTarget = false;
+                        moveTargetX = mineX;
+                        moveTargetY = mineY;
+                    } else {
+                        state = "idle";
+                        hsp = scrApproach(hsp,0,fric);
+                        vsp = scrApproach(vsp,0,fric);
+                        atTarget = true;
+                    }
+                } else { state = "idle"; }
+            break;
+            case "return": 
+                scrUnitMove();
+                if (instance_exists(oStationEnemy)) {
+                    atTarget = false;
+                    moveTargetX = oStationEnemy.x;
+                    moveTargetY = oStationEnemy.y;
+                }
+            break;
+        }   
+            
+        // Returning to the station
+        if (instance_exists(oStationEnemy)) {
+            if (place_meeting(x, y, oStationEnemy) &amp;&amp; state == "return") {
+                state = "findingMine";
+                workerMiningInt = 0;
+                global.enemyCurrency += 10;  
+            }
+        }
+        // Going to the mining point
+        if (instance_exists(oMiningPoint)) {
+            if (place_meeting(x, y, oMiningPoint) &amp;&amp; state == "idle") {
                 var inst = instance_nearest(x, y, oMiningPoint);
                 mineX = inst.x;
                 mineY = inst.y;
-            }
-        break;
-        case "move":
-            scrUnitMove();
-        break;
-        case "findingMine":
-            scrUnitMove();
-            //if (workerMiningInt &gt;= workerMiningTarget) { state = "return"; exit; }
-            if (instance_exists(oMiningPoint)) {
-                var dis = point_distance(x, y, mineX, mineY);
-                if (dis &gt; sprite_width/2) {
-                    atTarget = false;
-                    moveTargetX = mineX;
-                    moveTargetY = mineY;
+                workerMiningBarAlphaTar = 1;
+                if (workerMiningInt &lt; workerMiningTarget) {
+                    workerMiningInt++;
                 } else {
-                    state = "idle";
-                    hsp = scrApproach(hsp,0,fric);
-                    vsp = scrApproach(vsp,0,fric);
-                    atTarget = true;
-                }
-            } else { state = "idle"; }
-        break;
-        case "return": 
-            scrUnitMove();
-            if (instance_exists(oStationEnemy)) {
-                atTarget = false;
-                moveTargetX = oStationEnemy.x;
-                moveTargetY = oStationEnemy.y;
-            }
-        break;
-    }   
-        
-    // Returning to the station
-    if (instance_exists(oStationEnemy)) {
-        if (place_meeting(x, y, oStationEnemy) &amp;&amp; state == "return") {
-            state = "findingMine";
-            workerMiningInt = 0;
-            global.enemyCurrency += 10;  
-        }
-    }
-    // Going to the mining point
-    if (instance_exists(oMiningPoint)) {
-        if (place_meeting(x, y, oMiningPoint) &amp;&amp; state == "idle") {
-            var inst = instance_nearest(x, y, oMiningPoint);
-            mineX = inst.x;
-            mineY = inst.y;
-            workerMiningBarAlphaTar = 1;
-            if (workerMiningInt &lt; workerMiningTarget) {
-                workerMiningInt++;
+                    state = "return";
+                    atTarget = false;
+                    moveTargetX = oStationEnemy.x;
+                    moveTargetY = oStationEnemy.y;
+                } 
             } else {
-                state = "return";
-                atTarget = false;
-                moveTargetX = oStationEnemy.x;
-                moveTargetY = oStationEnemy.y;
-            } 
-        } else {
-            workerMiningBarAlphaTar = 0;
+                workerMiningBarAlphaTar = 0;
+            }
         }
+        
+        x += hsp; 
+        y += vsp; 
     }
-    
-    x += hsp; 
-    y += vsp; 
+
 }
 
 // Level-based AI

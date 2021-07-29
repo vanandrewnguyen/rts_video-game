@@ -61,7 +61,10 @@ bottomRot = 0;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>///NULLL
+            <string>///NULL
+
+scrUnitTakeDamage();
+scrReturnSquish(1, 0.1);
 </string>
           </argument>
         </arguments>

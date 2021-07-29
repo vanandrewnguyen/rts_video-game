@@ -29,8 +29,8 @@
 
 global.GUIWidth = 320*2;
 global.GUIHeight = 180*2;
-global.currency = 1000;
-global.enemyCurrency = 1000;
+global.currency = 500;
+global.enemyCurrency = 500;
 
 // Drawing variables
 display_set_gui_size(global.GUIWidth, global.GUIHeight);

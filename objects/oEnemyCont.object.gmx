@@ -26,9 +26,10 @@
           <argument>
             <kind>1</kind>
             <string>///Init
-global.difficulty = 5;
+global.difficulty = 0;
 timePassed = 0;
 timeWave = 0;
+count = 0;
 
 /* Establish difficulty settings using a 2D array. 
 dif[i, 0] = cluster size
@@ -42,12 +43,43 @@ dif[2,0] = 6;
 dif[3,0] = 8;
 dif[4,0] = 10;
 
-// Wait times (seconds)
-dif[0,1] = 16;
-dif[1,1] = 20;
-dif[2,1] = 35;
-dif[3,1] = 50;
-dif[4,1] = 65;
+// Variation in cluster size (lower bound)
+dif[0,1] = -1;
+dif[1,1] = -1;
+dif[2,1] = -2;
+dif[3,1] = -2;
+dif[4,1] = -3;
+//                           (upper bound)
+dif[0,2] = 1;
+dif[1,2] = 1;
+dif[2,2] = 2;
+dif[3,2] = 2;
+dif[4,2] = 3;
+
+// Wait times to spawn in new units (seconds)
+bufferSpawnTime = 30; // to be added on top of first spawn (TODO)
+dif[0,3] = 8;
+dif[1,3] = 10;
+dif[2,3] = 12;
+dif[3,3] = 16;
+dif[4,3] = 20;
+
+// Attack waves (wait until this time to send most units)
+dif[0,4] = 60;
+dif[1,4] = 90;
+dif[2,4] = 100;
+dif[3,4] = 120;
+dif[4,4] = 150;
+
+// Chances to spawn in ships
+scrResetSpawnChances();
+
+
+command[0] = "guardMinefield";
+command[1] = "guardBase";
+command[2] = "guardPoint";
+command[3] = "targetNearestPlayer";
+command[3] = "targetPlayerBase";
 
 </string>
           </argument>
@@ -72,8 +104,133 @@ dif[4,1] = 65;
           <argument>
             <kind>1</kind>
             <string>///Execute Director AI
-timePassed++;
-timeWave++;
+if (global.timeflow == 1) {
+    timePassed++;
+    timeWave++;
+}
+
+var d = global.difficulty;
+
+if (!instance_exists(oStationEnemy) || !instance_exists(oStation)) { exit; }
+
+// Execute waves
+if (timeWave &gt; (dif[d, 3]*60)) {
+    /*
+    First we check our money, then player ships (number of workers / number of fighters), 
+    then finally, we check our own number of fighters to give preference.
+    */
+    var finalClusterSize = dif[d, 0] + random_range(dif[d, 1], dif[d, 2]);
+    
+    // Money Check
+    if (global.enemyCurrency &lt; 50 * global.difficulty) {
+        if (oStationEnemy.hp &lt; 10) {
+            dif[1, 5] += 0.05;
+        }
+        // 50% chance to create a worker / freighter ship to collect money
+        dif[0, 5] += 0.1;
+    }
+    
+    // Check Player Ships
+    
+    // Check Enemy Ships
+    
+    // Check Difficulty Settings
+    switch(d) {
+        case 0: 
+        dif[0, 5] += 0.1; dif[1, 5] += 0.1; dif[2, 5] = 0; dif[3, 5] = 0; dif[4, 5] = 0;
+        break;
+        case 1: dif[2, 5] = 0; dif[3, 5] = 0;
+        break;
+        case 2: dif[2, 5] = 0; dif[3, 5] += 0.1;
+        break;
+        case 3: dif[2, 5] += 0.1;
+        break;
+        case 4: 
+        dif[0, 5] += 0.1; dif[1, 5] += 0.2; dif[3, 5] += 0.2;
+        dif[2,5] += 0.25; 
+        break;
+    }
+    
+    // Create the ships
+    repeat(finalClusterSize) {
+        var spawnShip = noone;
+        if (scrChance(dif[3, 5]) &amp;&amp; instance_number(oSniperEnemy) &lt; 4) {
+            spawnShip = oSniperEnemy;
+        } 
+        if (scrChance(dif[2, 5]) &amp;&amp; instance_number(oTankEnemy) &lt; 4) {
+            spawnShip = oTankEnemy;
+        } 
+        if (scrChance(dif[4, 5]) &amp;&amp; instance_number(oKamikazeEnemy) &lt; 8) {
+            spawnShip = oKamikazeEnemy;
+        }
+        if (scrChance(dif[1, 5]) &amp;&amp; instance_number(oInfantryEnemy) &lt; 12) {
+            spawnShip = choose(oInfantryEnemy, oBomberEnemy);
+        }
+        if (scrChance(dif[0, 5]) &amp;&amp; instance_number(oWorkerEnemy) &lt; 10) {
+            if (d &lt;= 3) {
+                spawnShip = oWorkerEnemy;
+            } else {
+                spawnShip = oFreighterEnemy;
+            }
+        }
+        
+        if (spawnShip != noone) {
+            var xGap = -64 + random_range(-16, 16);
+            var yGap = random_range(-64, 64);
+            var xx = oStationEnemy.x + xGap;
+            var yy = oStationEnemy.y + yGap;
+            
+            // Create Ship and assign it to a cluster object
+            instance_create(xx, yy, spawnShip);
+            
+            //Explosion
+            scrPurchaseShipFX(xx, yy);
+        }
+        
+    }
+    
+    // Reset
+    timeWave = 0;
+    scrResetSpawnChances();
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="8" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>///Debug Draw
+
+var xx = mouse_x + 32;
+var yy = mouse_y - 32;
+
+draw_set_font(fntSma);
+draw_set_colour(c_white);
+draw_text(xx, yy, "time wave: "+string(timeWave));
+draw_text(xx, yy + 16, "time target: "+string(dif[global.difficulty, 3]*60));
+draw_text(xx, yy + 16*2, string(dif[0,5]));
+draw_text(xx, yy + 16*3, string(dif[1,5]));
+draw_text(xx, yy + 16*4, string(dif[2,5]));
+draw_text(xx, yy + 16*5, string(dif[3,5]));
+draw_text(xx, yy + 16*6, string(dif[4,5]));
+
+
 </string>
           </argument>
         </arguments>
