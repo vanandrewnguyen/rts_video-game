@@ -38,7 +38,7 @@ dif[i, 1] = wait time
 
 // Cluster Size
 dif[0,0] = 2;
-dif[1,0] = 4;
+dif[1,0] = 3;
 dif[2,0] = 6;
 dif[3,0] = 8;
 dif[4,0] = 10;
@@ -74,13 +74,20 @@ dif[4,4] = 150;
 // Chances to spawn in ships
 scrResetSpawnChances();
 
+// Commands are listed in order of first check to last
 
-command[0] = "guardMinefield";
-command[1] = "guardBase";
-command[2] = "guardPoint";
-command[3] = "targetNearestPlayer";
-command[3] = "targetPlayerBase";
-
+command[0, 0] = "guardPoint";
+command[1, 0] = "guardBase";
+command[2, 0] = "guardHighestMinefield";
+command[3, 0] = "targetNearestPlayer";
+command[4, 0] = "guardNearestMinefield";
+command[5, 0] = "targetPlayerBase";
+command[0, 1] = 0.1;
+command[1, 1] = 0.1;
+command[2, 1] = 0.1;
+command[3, 1] = 0.1;
+command[4, 1] = 0.1;
+command[5, 1] = 0.1;
 </string>
           </argument>
         </arguments>
@@ -113,13 +120,24 @@ var d = global.difficulty;
 
 if (!instance_exists(oStationEnemy) || !instance_exists(oStation)) { exit; }
 
+
 // Execute waves
 if (timeWave &gt; (dif[d, 3]*60)) {
     /*
     First we check our money, then player ships (number of workers / number of fighters), 
     then finally, we check our own number of fighters to give preference.
+    We have a preset cluster (using our own sets of ships)
+    and a random cluster which only spawns using chance. The random cluster
+    is to add variation.
     */
+    var xGap = -72 + random_range(-32, 32);
+    var yGap = random_range(-64, 64);
+    var xx = oStationEnemy.x + xGap;
+    var yy = oStationEnemy.y + yGap;
+    
     var finalClusterSize = dif[d, 0] + random_range(dif[d, 1], dif[d, 2]);
+    var setClusterSize = round(finalClusterSize * 0.75);
+    var randomClusterSize = finalClusterSize - setClusterSize;
     
     // Money Check
     if (global.enemyCurrency &lt; 50 * global.difficulty) {
@@ -151,8 +169,86 @@ if (timeWave &gt; (dif[d, 3]*60)) {
         break;
     }
     
-    // Create the ships
-    repeat(finalClusterSize) {
+    // Command for cluster
+    var currentCommand = scrSetEnemyClusterObj();
+    var clusterInst = instance_create(xx, yy, oEnemyCluster);
+    clusterInst.command = currentCommand; 
+    switch(currentCommand) {
+        case "guardPoint":
+        clusterInst.targetX = xx;
+        clusterInst.targetY = yy;
+        break;
+        case "guardBase":
+        clusterInst.targetX = oStationEnemy.x + random_range(-128, 128);
+        clusterInst.targetY = oStationEnemy.y + random_range(-128, 128);
+        break;
+        case "guardHighestMinefield":
+        clusterInst.targetX = xx;
+        clusterInst.targetY = yy;
+        break;
+        case "targetNearestPlayer":
+        if (instance_exists(oUnitParent)) {
+            var inst = instance_nearest(xx, yy, oUnitParent);
+            if (instance_exists(inst)) {
+                clusterInst.targetX = inst.x;
+                clusterInst.targetY = inst.y;
+            }
+        } else {
+            clusterInst.targetX = oStationEnemy.x + random_range(-128, 128);
+            clusterInst.targetY = oStationEnemy.x + random_range(-128, 128);
+        }
+        break;
+        case "guardNearestMinefield":
+        if (instance_exists(oMiningPoint)) {
+            var inst = instance_nearest(xx, yy, oMiningPoint);
+            if (instance_exists(inst)) {
+                clusterInst.targetX = inst.x + random_range(-128, 128);
+                clusterInst.targetY = inst.y + random_range(-128, 128);
+            }
+        } else {
+            clusterInst.targetX = oStationEnemy.x + random_range(-128, 128);
+            clusterInst.targetY = oStationEnemy.x + random_range(-128, 128);
+        }
+        break;
+        case "targetPlayerBase":
+        if (instance_exists(oStation)) {
+            var inst = instance_nearest(xx, yy, oStation);
+            if (instance_exists(inst)) {
+                clusterInst.targetX = inst.x;
+                clusterInst.targetY = inst.y;
+            }
+        } else {
+            clusterInst.targetX = oStationEnemy.x + random_range(-128, 128);
+            clusterInst.targetY = oStationEnemy.x + random_range(-128, 128);
+        }
+        break;
+    }
+    
+    // Create the preset ships
+    switch(d) {
+        case 0: //Easy Difficulty
+        var numWorkers = 1;
+        if (!instance_exists(oMiningPoint) || instance_number(oWorkerEnemy) &lt; 10 &amp;&amp;
+            global.currency &gt; 200) {
+            numWorkers--;   
+        }
+        repeat(numWorkers) {
+            if (instance_number(oWorkerEnemy) &lt; 12) {
+                scrSpawnEnemy(xx+random_range(-64,64), yy, oWorkerEnemy, clusterInst);
+                setClusterSize--;
+            }
+        }
+        repeat(setClusterSize) {
+            if (instance_number(oInfantryEnemy) &lt; 12) {
+                scrSpawnEnemy(xx+random_range(-64,64), yy, oInfantryEnemy, clusterInst);
+            }
+        }
+        break;
+    }
+    
+    
+    // Create the random ships
+    repeat(randomClusterSize) {
         var spawnShip = noone;
         if (scrChance(dif[3, 5]) &amp;&amp; instance_number(oSniperEnemy) &lt; 4) {
             spawnShip = oSniperEnemy;
@@ -175,24 +271,16 @@ if (timeWave &gt; (dif[d, 3]*60)) {
         }
         
         if (spawnShip != noone) {
-            var xGap = -64 + random_range(-16, 16);
-            var yGap = random_range(-64, 64);
-            var xx = oStationEnemy.x + xGap;
-            var yy = oStationEnemy.y + yGap;
-            
             // Create Ship and assign it to a cluster object
-            instance_create(xx, yy, spawnShip);
-            
-            //Explosion
-            scrPurchaseShipFX(xx, yy);
+            scrSpawnEnemy(xx+random_range(-64,64), yy, spawnShip, clusterInst);
         }
-        
     }
     
     // Reset
     timeWave = 0;
     scrResetSpawnChances();
 }
+
 </string>
           </argument>
         </arguments>

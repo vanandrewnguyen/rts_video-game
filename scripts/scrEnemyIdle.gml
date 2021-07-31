@@ -6,6 +6,12 @@ inCombat = false;
 hsp = scrApproach(hsp,0,fric);
 vsp = scrApproach(vsp,0,fric);
 
+// Follow Cluster
+if (instance_exists(clusterTarget)) {
+    moveTarget = clusterTarget;
+    state = "chase";
+}
+
 // Detect Player Ships
 if (instance_exists(oUnitParent)) {
     var inst = instance_nearest(x, y, oUnitParent);

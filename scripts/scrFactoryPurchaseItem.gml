@@ -16,11 +16,5 @@ var inst = instance_create(xx, yy, factoryBuildIndex[factoryAnimTar,4]);
 // Subtract the fees
 global.currency -= factoryBuildIndex[factoryAnimTar, 1];
 
-// Explosion
-scrCreateExplosion(xx, yy, sExplosionCircleBig, false, 0, 0, 0, -1);
-repeat(random_range(6, 10)) {
-    part_particles_create(global.pSysBelow, 
-                          xx + random_range(-32, 32), 
-                          yy + random_range(-32, 32), 
-                          global.partShipTrail, 1);
-}
+
+

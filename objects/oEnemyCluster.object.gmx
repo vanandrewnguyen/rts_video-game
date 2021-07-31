@@ -36,12 +36,47 @@ or a point within the map to push.
 
 targetX = 0;
 targetY = 0;
+command = "";
+alarm[0] = 1;
 
 dir = 0;
-spd = 3;
+spd = 1.5;
+countInt = 0;
+countTar = 60*5;
 
 atTarget = false;
 
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="2" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Destroy
+// Loop through all enemies. If no enemies are assigned to this obj, then kill itself.
+var check = false;
+for (var i = 0; i &lt; instance_number(oEnemyParent); ++i;) {
+    var inst = instance_find(oEnemyParent, i);
+    if (inst.clusterTarget == id) { check = true; }
+}
+    
+if (!check) { instance_destroy(); }
 </string>
           </argument>
         </arguments>
@@ -67,9 +102,47 @@ atTarget = false;
             <string>///Move 
 
 if (!atTarget) {
-    dir = point_direction(x, y, targetX, targetY);
-    motion_set(dir, spd);
-}
+    if (global.timeflow == 1) {
+        dir = point_direction(x, y, targetX, targetY);
+        motion_set(dir, spd);
+        friction = 0;
+        if (abs(x - targetX) &lt; spd &amp;&amp; abs(y - targetY) &lt; spd) {
+            if (countInt &lt; countTar) {
+                countInt++;
+            } else {
+                atTarget = true;
+            }
+        }
+    }   else {
+        friction = 0.6;
+    }
+} else { instance_destroy(); } 
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="8" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>///Draw
+draw_set_colour(c_white);
+draw_text(x, y-32, command);
+draw_self();
 </string>
           </argument>
         </arguments>

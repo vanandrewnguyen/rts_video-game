@@ -104,14 +104,17 @@ if (global.timeflow == 1) {
     if (instance_exists(oMiningPoint)) {
         if (place_meeting(x, y, oMiningPoint) &amp;&amp; state == "idle") {
             var inst = instance_nearest(x, y, oMiningPoint);
-            mineX = inst.x;
-            mineY = inst.y;
-            workerMiningBarAlphaTar = 1;
-            if (workerMiningInt &lt; workerMiningTarget) {
-                workerMiningInt++;
-            } else {
-                state = "return";
-            } 
+            if (instance_exists(inst)) {
+                mineX = inst.x;
+                mineY = inst.y;
+                workerMiningBarAlphaTar = 1;
+                if (workerMiningInt &lt; workerMiningTarget) {
+                    workerMiningInt++;
+                } else {
+                    inst.totalMines--;
+                    state = "return";
+                } 
+            }
         } else {
             workerMiningBarAlphaTar = 0;
         }

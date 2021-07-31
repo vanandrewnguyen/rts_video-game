@@ -1,6 +1,5 @@
 ///scrEnemyChase();
 // Chase State
-inCombat = true;
 
 // Detect Player Ships
 if (instance_exists(moveTarget)) {
@@ -12,19 +11,35 @@ if (instance_exists(moveTarget)) {
     // Spritework
     unitAngle = dir;
     
-    // Check if within range
-    if (dis < attackRange) {
-        state = "attack";
-        atTarget = true;
-        firingTarget = moveTarget;
-    } else {
-        var tempRange = 0;
-        if (inCombat == true) {
-            tempRange = chaseRange*2;
+    if (moveTarget != clusterTarget) { 
+        inCombat = true; 
+        // Check if within range
+        if (dis < attackRange) {
+            state = "attack";
+            atTarget = true;
+            firingTarget = moveTarget;
         } else {
-            tempRange = chaseRange;
+            var tempRange = 0;
+            if (inCombat == true) {
+                tempRange = chaseRange*2;
+            } else {
+                tempRange = chaseRange;
+            }
+            if (dis > tempRange) { scrEnemyResetIdle(); }
         }
-        if (dis > tempRange) { scrEnemyResetIdle(); }
+    } else {
+        // Detect Player Ships (if move target is the cluster, then we need to switch out)
+        if (instance_exists(oUnitParent)) {
+            var inst = instance_nearest(x, y, oUnitParent);
+            var dis = point_distance(x, y, inst.x, inst.y);
+            // Check if within range
+            if (dis < chaseRange) {
+                atTarget = false;
+                moveTarget = inst;
+                moveTargetX = inst.x;
+                moveTargetY = inst.y;
+            }
+        }
     }
 } else {
     scrEnemyResetIdle();

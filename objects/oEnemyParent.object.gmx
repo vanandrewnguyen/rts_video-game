@@ -30,13 +30,14 @@
 // Use unit scripts
 scrUnitInit(ENEMYINDEX, 3, 2, 0.25, 0.15, 2, 
             96, 60, 8, 8, 1, sBullet, true, "parent");
-
+scrPurchaseShipFX(x, y);
+            
 // Enemy Variables
 chaseRange = 160;
 attackRange = 96;
 loadTime = 120;
 loadInt = 0;
-
+clusterTarget = noone;
 </string>
           </argument>
         </arguments>
