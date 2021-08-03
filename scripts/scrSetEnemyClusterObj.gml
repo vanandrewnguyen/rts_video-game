@@ -10,6 +10,38 @@ switch(global.difficulty) {
     command[4, 1] = 0.25;
     command[5, 1] = 0.2;
     break;
+    case 1:
+    command[0, 1] = 0.0;
+    command[1, 1] = 0.15;
+    command[2, 1] = 0.05;
+    command[3, 1] = 0.05;
+    command[4, 1] = 0.25;
+    command[5, 1] = 0.2;
+    break;
+    case 2:
+    command[0, 1] = 0.1;
+    command[1, 1] = 0.1;
+    command[2, 1] = 0.25;
+    command[3, 1] = 0.1;
+    command[4, 1] = 0.4;
+    command[5, 1] = 0.25;
+    break;
+    case 3:
+    command[0, 1] = 0.1;
+    command[1, 1] = 0.15;
+    command[2, 1] = 0.25;
+    command[3, 1] = 0.1;
+    command[4, 1] = 0.5;
+    command[5, 1] = 0.75;
+    break;
+    case 4:
+    command[0, 1] = 0.0;
+    command[1, 1] = 0.15;
+    command[2, 1] = 0.3;
+    command[3, 1] = 0.0;
+    command[4, 1] = 0.5;
+    command[5, 1] = 0.75;
+    break;
 }
 
 
@@ -18,7 +50,7 @@ for (var c=0;c<5;c++) {
 }   
 // Check if it has bypassed all chances and remains blank
 if (currentCommand == "") {
-    currentCommand = command[choose(1, 5), 0];
+    currentCommand = command[choose(1, 3, 5, 5), 0];
 }
 
 return currentCommand;

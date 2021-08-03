@@ -40,7 +40,7 @@ command = "";
 alarm[0] = 1;
 
 dir = 0;
-spd = 1.5;
+spd = 2;
 countInt = 0;
 countTar = 60*5;
 

@@ -27,13 +27,15 @@
             <kind>1</kind>
             <string>///Init
 time = 0;
-totalMines = irandom_range(40, 50);
+maxMines = 50;
+totalMines = irandom_range(40, maxMines);
+
 
 // Create a set of asteroids that float around (aesthetics only - does not affect gameplay)
 asteroidNumber = irandom_range(3, 5);
 for(var i=0;i&lt;asteroidNumber;i++) {
     // Distance
-    asteroid[i,0] = random_range(16, 48);
+    asteroid[i,0] = random_range(20, 56);
     // Sprites and Index and Starting Angle and Rotation Speed
     asteroid[i,1] = choose(sAsteroidsBig, sAsteroidsMedium, sAsteroidsSmall);
     asteroid[i,2] = irandom(2);
@@ -43,6 +45,8 @@ for(var i=0;i&lt;asteroidNumber;i++) {
     asteroid[i,5] = random_range(-0.3,0.3);
     // Scale
     asteroid[i,6] = random_range(0.8,1);
+    asteroid[i,7] = asteroid[i,6];
+    asteroid[i,8] = asteroid[i,0];
 }
 
 xScale = 1;
@@ -131,6 +135,7 @@ if (totalMines &lt;= 0) {
             <kind>1</kind>
             <string>///Draw
 if (global.timeflow == 1) { time++; }
+var ratio = (totalMines / maxMines);
 
 // Draw Asteroids
 for(var i=0;i&lt;asteroidNumber;i++) {
@@ -138,6 +143,8 @@ for(var i=0;i&lt;asteroidNumber;i++) {
     var rot = asteroid[i,3] + (time * asteroid[i,4]);
     var xx = x + lengthdir_x(asteroid[i,0], angle);
     var yy = y + lengthdir_y(asteroid[i,0], angle);
+    asteroid[i,0] = asteroid[i,8] * ratio + 32;
+    asteroid[i,6] = asteroid[i,7] * ratio + 0.25;
     draw_sprite_ext(asteroid[i,1], asteroid[i,2], xx, yy, 
                     asteroid[i,6]*xScale, asteroid[i,6]*yScale, rot, c_white, 1);
 }
@@ -156,7 +163,8 @@ draw_set_colour(c_white);
 draw_circle(x, y, sprite_width/2, true);
 draw_set_alpha(1);
 
-draw_text(x, y-32, "mines left: "+string(totalMines));
+
+//draw_text(x, y-32, "mines left: "+string(totalMines));
 
 
 </string>

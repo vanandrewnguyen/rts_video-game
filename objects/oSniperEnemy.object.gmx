@@ -29,7 +29,7 @@
 event_inherited();
 
 scrUnitInit(ENEMYINDEX, 1.5, 1.5, 0.15, 0.1, 4,
-            256, 180, 2, 12, 3, sBulletSniper, true, "Sniper");
+            256, 180, 2, 12, 4, sBulletSniper, true, "Sniper");
 chaseRange = 256;
 
 </string>

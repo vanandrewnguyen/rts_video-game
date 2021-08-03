@@ -39,6 +39,9 @@ alpha = 1;
 bottomXScale = 1;
 bottomYScale = 1;
 bottomRot = 0; 
+hpBarAlpha = 0;
+hpBarAlphaTar = 0;
+
 </string>
           </argument>
         </arguments>
@@ -65,6 +68,17 @@ bottomRot = 0;
 
 scrUnitTakeDamage();
 scrReturnSquish(1, 0.1);
+
+// Toggle Select
+if (mouse_check_button(mb_left)) {
+    scrToggleSelect(oMouse.px, oMouse.py, mouse_x, mouse_y);
+}
+
+// Money Add
+var add = global.difficulty * 0.02;
+if (global.timeflow == 1 &amp;&amp; selected = false) {
+    global.enemyCurrency += add;
+}
 </string>
           </argument>
         </arguments>
@@ -100,6 +114,20 @@ if (global.timeflow == 1) {
     rot += 0.5;
     bottomRot += -1;
 }
+
+// Draw Hp Bar 
+hpBarAlpha = lerp(hpBarAlpha, hpBarAlphaTar, 0.1);
+hpDraw = lerp(hpDraw, hp, 0.1);
+if (selected == true) {
+    hpBarAlphaTar = 1;
+    draw_set_alpha(hpBarAlpha);
+    draw_set_colour(c_white);
+    draw_rectangle(x - 16, y - 36 - 1, x + 16, y - 36 + 2, true);
+    var pc = (hpDraw / maxHp) * 100;
+    draw_healthbar(x - 16, y - 36, x + 16, y - 36 + 2, pc, 
+                   global.colLightPink, global.colLightPink, global.colLightPink, 0, false, false);
+    draw_set_alpha(1);
+} else { hpBarAlphaTar = 0; }
 </string>
           </argument>
         </arguments>

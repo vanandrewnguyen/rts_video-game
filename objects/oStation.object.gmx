@@ -36,6 +36,7 @@ teamIndex = PLAYERINDEX;
 // Health Variables
 hp = 25;
 maxHp = hp;
+hpDraw = 0;
 
 // Factory Variables
 scrInitFactoryData();
@@ -49,6 +50,8 @@ alpha = 1;
 bottomXScale = 1;
 bottomYScale = 1;
 bottomRot = 0; 
+hpBarAlpha = 0;
+hpBarAlphaTar = 0;
 </string>
           </argument>
         </arguments>
@@ -180,6 +183,21 @@ if (global.timeflow == 1) {
     bottomRot += -1;
 }
 
+// Draw Hp Bar 
+hpBarAlpha = lerp(hpBarAlpha, hpBarAlphaTar, 0.1);
+hpDraw = lerp(hpDraw, hp, 0.1);
+if (state == "selected") {
+    hpBarAlphaTar = 1;
+    draw_set_alpha(hpBarAlpha);
+    draw_set_colour(c_white);
+    draw_rectangle(x - 16, y - 36 - 1, x + 16, y - 36 + 2, true);
+    var pc = (hpDraw / maxHp) * 100;
+    draw_healthbar(x - 16, y - 36, x + 16, y - 36 + 2, pc, 
+                   global.colDarkOrange, global.colDarkOrange, global.colDarkOrange, 0, false, false);
+    draw_set_alpha(1);
+} else { hpBarAlphaTar = 0; }
+
+
 // Deploy Menu RHS
 draw_set_font(fntSma);
 if (state == "selected") {
@@ -216,6 +234,12 @@ if (state == "selected") {
             draw_text_transformed(xx + 32 + lengthdir_x(len, dir), 
                                   yy - fHeight + lengthdir_y(len, dir), 
                                   factoryBuildIndex[i,0], 1,1, dir);
+            var strLen = string_width(factoryBuildIndex[i,0]) + 4;
+            if (i == factoryAnimTar) {
+                draw_text_transformed(xx + strLen + 32 + lengthdir_x(len, dir), 
+                                  yy - fHeight + lengthdir_y(len, dir), 
+                                  "$"+string(factoryBuildIndex[i,1]), 1,1, dir);
+            }
         }
         draw_sprite_ext(factoryBuildIndex[factoryAnimTar,3], 0, x, y, 
                         factoryAnimScale, factoryAnimScale, 0, c_white, 1);

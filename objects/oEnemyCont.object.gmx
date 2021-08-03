@@ -26,7 +26,7 @@
           <argument>
             <kind>1</kind>
             <string>///Init
-global.difficulty = 0;
+global.difficulty = 3;
 timePassed = 0;
 timeWave = 0;
 count = 0;
@@ -38,8 +38,8 @@ dif[i, 1] = wait time
 
 // Cluster Size
 dif[0,0] = 2;
-dif[1,0] = 3;
-dif[2,0] = 6;
+dif[1,0] = 4;
+dif[2,0] = 7;
 dif[3,0] = 8;
 dif[4,0] = 10;
 
@@ -59,10 +59,10 @@ dif[4,2] = 3;
 // Wait times to spawn in new units (seconds)
 bufferSpawnTime = 30; // to be added on top of first spawn (TODO)
 dif[0,3] = 8;
-dif[1,3] = 10;
-dif[2,3] = 12;
+dif[1,3] = 9;
+dif[2,3] = 13;
 dif[3,3] = 16;
-dif[4,3] = 20;
+dif[4,3] = 18;
 
 // Attack waves (wait until this time to send most units)
 dif[0,4] = 60;
@@ -70,6 +70,7 @@ dif[1,4] = 90;
 dif[2,4] = 100;
 dif[3,4] = 120;
 dif[4,4] = 150;
+
 
 // Chances to spawn in ships
 scrResetSpawnChances();
@@ -173,20 +174,52 @@ if (timeWave &gt; (dif[d, 3]*60)) {
     var currentCommand = scrSetEnemyClusterObj();
     var clusterInst = instance_create(xx, yy, oEnemyCluster);
     clusterInst.command = currentCommand; 
+    var spread = 96;
     switch(currentCommand) {
-        case "guardPoint":
-        clusterInst.targetX = xx;
-        clusterInst.targetY = yy;
+        case "guardPoint": // Guards the middle point between all player ships
+        var xx = 0;
+        var yy = 0;
+        var num = instance_number(oUnitParent);
+        if (num == 0) {
+            if (instance_exists(oStation)) {
+                clusterInst.targetX = oStation.x;
+                clusterInst.targetY = oStation.y;
+            }
+        } else {
+            for (var i=0;i&lt;num;++i) {
+                var inst = instance_find(oUnitParent, i);
+                xx += oUnitParent.x;
+                yy += oUnitParent.y;
+            }
+            xx /= num;
+            yy /= num;
+            clusterInst.targetX = xx + random_range(-spread, spread);
+            clusterInst.targetY = yy + random_range(-spread, spread);
+        }
         break;
-        case "guardBase":
-        clusterInst.targetX = oStationEnemy.x + random_range(-128, 128);
-        clusterInst.targetY = oStationEnemy.y + random_range(-128, 128);
+        case "guardBase": // Guards the Enemy Base
+        clusterInst.targetX = oStationEnemy.x + random_range(-spread, spread);
+        clusterInst.targetY = oStationEnemy.y + random_range(-spread, spread);
         break;
-        case "guardHighestMinefield":
-        clusterInst.targetX = xx;
-        clusterInst.targetY = yy;
+        case "guardHighestMinefield": // Selects the minefield with the highest mines and guards it
+        var highestSum = 0;
+        var highestMine = noone;
+        for (var i=0;i&lt;instance_number(oMiningPoint);++i) {
+            var inst = instance_find(oMiningPoint, i);
+            if (inst.totalMines &gt; highestSum) {
+                highestSum = inst.totalMines;
+                highestMine = inst.id;
+            }
+        }
+        if (highestMine != noone) {
+            clusterInst.targetX = highestMine.x + random_range(-spread, spread);
+            clusterInst.targetY = highestMine.y + random_range(-spread, spread);
+        } else {
+            clusterInst.targetX = oStationEnemy.x + random_range(-spread, spread);
+            clusterInst.targetY = oStationEnemy.y + random_range(-spread, spread);
+        }
         break;
-        case "targetNearestPlayer":
+        case "targetNearestPlayer": // Targets the nearest player ship
         if (instance_exists(oUnitParent)) {
             var inst = instance_nearest(xx, yy, oUnitParent);
             if (instance_exists(inst)) {
@@ -194,23 +227,23 @@ if (timeWave &gt; (dif[d, 3]*60)) {
                 clusterInst.targetY = inst.y;
             }
         } else {
-            clusterInst.targetX = oStationEnemy.x + random_range(-128, 128);
-            clusterInst.targetY = oStationEnemy.x + random_range(-128, 128);
+            clusterInst.targetX = oStationEnemy.x + random_range(-spread, spread);
+            clusterInst.targetY = oStationEnemy.x + random_range(-spread, spread);
         }
         break;
-        case "guardNearestMinefield":
+        case "guardNearestMinefield": // Selects the nearest minefield and guards it
         if (instance_exists(oMiningPoint)) {
             var inst = instance_nearest(xx, yy, oMiningPoint);
             if (instance_exists(inst)) {
-                clusterInst.targetX = inst.x + random_range(-128, 128);
-                clusterInst.targetY = inst.y + random_range(-128, 128);
+                clusterInst.targetX = inst.x + random_range(-spread, spread);
+                clusterInst.targetY = inst.y + random_range(-spread, spread);
             }
         } else {
-            clusterInst.targetX = oStationEnemy.x + random_range(-128, 128);
-            clusterInst.targetY = oStationEnemy.x + random_range(-128, 128);
+            clusterInst.targetX = oStationEnemy.x + random_range(-spread, spread);
+            clusterInst.targetY = oStationEnemy.x + random_range(-spread, spread);
         }
         break;
-        case "targetPlayerBase":
+        case "targetPlayerBase": // Targets the nearest player base
         if (instance_exists(oStation)) {
             var inst = instance_nearest(xx, yy, oStation);
             if (instance_exists(inst)) {
@@ -218,31 +251,128 @@ if (timeWave &gt; (dif[d, 3]*60)) {
                 clusterInst.targetY = inst.y;
             }
         } else {
-            clusterInst.targetX = oStationEnemy.x + random_range(-128, 128);
-            clusterInst.targetY = oStationEnemy.x + random_range(-128, 128);
+            clusterInst.targetX = oStationEnemy.x + random_range(-spread, spread);
+            clusterInst.targetY = oStationEnemy.x + random_range(-spread, spread);
         }
         break;
     }
     
     // Create the preset ships
     switch(d) {
-        case 0: //Easy Difficulty
-        var numWorkers = 1;
-        if (!instance_exists(oMiningPoint) || instance_number(oWorkerEnemy) &lt; 10 &amp;&amp;
-            global.currency &gt; 200) {
-            numWorkers--;   
-        }
-        repeat(numWorkers) {
-            if (instance_number(oWorkerEnemy) &lt; 12) {
-                scrSpawnEnemy(xx+random_range(-64,64), yy, oWorkerEnemy, clusterInst);
-                setClusterSize--;
+        case 0: // Base Difficulty
+            var numWorkers = 2;
+            if (!instance_exists(oMiningPoint) || instance_number(oWorkerEnemy) &lt; 10 &amp;&amp;
+                global.currency &gt; 200) {
+                numWorkers--;   
             }
-        }
-        repeat(setClusterSize) {
-            if (instance_number(oInfantryEnemy) &lt; 12) {
+            repeat(numWorkers) {
+                if (instance_number(oWorkerEnemy) &lt; 12) {
+                    scrSpawnEnemy(xx+random_range(-64,64), yy, oWorkerEnemy, clusterInst);
+                    setClusterSize--;
+                }
+            }
+            repeat(setClusterSize) {
+                if (instance_number(oInfantryEnemy) &lt; 12) {
+                    scrSpawnEnemy(xx+random_range(-64,64), yy, oInfantryEnemy, clusterInst);
+                }
+            }
+        break;
+        case 1: // Easy Difficulty
+            if (currentCommand == "targetPlayerBase" || currentCommand == "targetNearestPlayer") {
+                repeat(setClusterSize) {
+                    var spawnInst = choose(oInfantryEnemy, oInfantryEnemy, oKamikazeEnemy);
+                    scrSpawnEnemy(xx+random_range(-64,64), yy, spawnInst, clusterInst);
+                }
+            } else if (currentCommand == "guardHighestMinefield" || currentCommand == "guardNearestMinefield") {
+                repeat(setClusterSize) {
+                    var spawnInst = choose(oInfantryEnemy, oInfantryEnemy, oInfantryEnemy, oWorkerEnemy);
+                    scrSpawnEnemy(xx+random_range(-64,64), yy, spawnInst, clusterInst);
+                }
+            } else {
+                repeat(setClusterSize-1) {
+                    if (instance_number(oWorkerEnemy) &lt; 10) {
+                        scrSpawnEnemy(xx+random_range(-64,64), yy, oWorkerEnemy, clusterInst);
+                    } else {
+                        scrSpawnEnemy(xx+random_range(-64,64), yy, oKamikaze, clusterInst);
+                        clusterInst.command = "targetPlayerBase";
+                    }
+                }
                 scrSpawnEnemy(xx+random_range(-64,64), yy, oInfantryEnemy, clusterInst);
             }
-        }
+        break;
+        case 2: // Moderate Difficulty
+            if (currentCommand == "targetPlayerBase" || currentCommand == "targetNearestPlayer") {
+                repeat(setClusterSize) {
+                    var spawnInst = choose(oTankEnemy, oInfantryEnemy, oInfantryEnemy, oKamikazeEnemy, oWorkerEnemy);
+                    scrSpawnEnemy(xx+random_range(-64,64), yy, spawnInst, clusterInst);
+                }
+            } else if (currentCommand == "guardHighestMinefield" || currentCommand == "guardNearestMinefield") {
+                repeat(setClusterSize) {
+                    var spawnInst = choose(oSniperEnemy, oInfantryEnemy, oInfantryEnemy, oWorkerEnemy, oWorkerEnemy);
+                    scrSpawnEnemy(xx+random_range(-64,64), yy, spawnInst, clusterInst);
+                }
+            } else {
+                repeat(setClusterSize-1) {
+                    if (instance_number(oWorkerEnemy) &lt; 10) {
+                        scrSpawnEnemy(xx+random_range(-64,64), yy, oWorkerEnemy, clusterInst);
+                    } else {
+                        scrSpawnEnemy(xx+random_range(-64,64), yy, oKamikaze, clusterInst);
+                        clusterInst.command = "targetPlayerBase";
+                    }  
+                }
+                scrSpawnEnemy(xx+random_range(-64,64), yy, choose(oSniperEnemy, oInfantryEnemy), clusterInst);
+            }
+        break;
+        case 3: // Hard Difficulty
+            if (currentCommand == "targetPlayerBase" || currentCommand == "targetNearestPlayer") {
+                repeat(setClusterSize/2) {
+                    var spawnInst = choose(oBomberEnemy, oBomberEnemy, oKamikazeEnemy);
+                    scrSpawnEnemy(xx+random_range(-64,64), yy, spawnInst, clusterInst);
+                }
+                repeat(setClusterSize/2) {
+                    if (instance_number(oFreighterEnemy) &lt; 10) {
+                        var spawnInst = choose(oFreighterEnemy);
+                        scrSpawnEnemy(xx+random_range(-64,64), yy, spawnInst, clusterInst);
+                    } else {
+                        scrSpawnEnemy(xx+random_range(-64,64), yy, oKamikaze, clusterInst);
+                        clusterInst.command = "targetPlayerBase";
+                    }
+                }
+            } else if (currentCommand == "guardHighestMinefield" || currentCommand == "guardNearestMinefield") {
+                repeat(setClusterSize) {
+                    var spawnInst = choose(oSniperEnemy, oTankEnemy, oBomberEnemy, oFreighterEnemy);
+                    scrSpawnEnemy(xx+random_range(-64,64), yy, spawnInst, clusterInst);
+                }
+            } else {
+                repeat(setClusterSize*0.75) {
+                    var spawnInst = choose(oSniperEnemy, oTankEnemy, oInfantryEnemy, oWorkerEnemy);
+                    scrSpawnEnemy(xx+random_range(-64,64), yy, spawnInst, clusterInst);
+                }
+            } 
+        break;
+        case 4: // Hardest Difficulty
+            if (currentCommand == "targetPlayerBase" || currentCommand == "targetNearestPlayer") {
+                repeat(setClusterSize) {
+                    var spawnInst = choose(oTankEnemy, oInfantryEnemy, oInfantryEnemy, oKamikazeEnemy, oWorkerEnemy);
+                    scrSpawnEnemy(xx+random_range(-64,64), yy, spawnInst, clusterInst);
+                }
+            } else if (currentCommand == "guardHighestMinefield" || currentCommand == "guardNearestMinefield") {
+                repeat(setClusterSize) {
+                    var spawnInst = choose(oSniperEnemy, oInfantryEnemy, oInfantryEnemy, oWorkerEnemy, oWorkerEnemy);
+                    scrSpawnEnemy(xx+random_range(-64,64), yy, spawnInst, clusterInst);
+                }
+            } else {
+                repeat(setClusterSize) {
+                    if (instance_number(oFreighterEnemy) &lt; 10) {
+                        scrSpawnEnemy(xx+random_range(-64,64), yy, oFreighterEnemy, clusterInst);
+                    } else {
+                        var inst = choose(oBomberEnemy, oBomberEnemy, oWorkerEnemy);
+                        scrSpawnEnemy(xx+random_range(-64,64), yy, inst, clusterInst);
+                        clusterInst.command = "guardNearestMinefield";
+                    }  
+                }
+                scrSpawnEnemy(xx+random_range(-64,64), yy, choose(oSniperEnemy, oInfantryEnemy), clusterInst);
+            }
         break;
     }
     

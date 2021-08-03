@@ -28,10 +28,11 @@
             <string>///Init
 event_inherited();
 
-scrUnitInit(ENEMYINDEX, 2, 2.8, 0.5, 0.2, 3,
+scrUnitInit(ENEMYINDEX, 2, 2.5, 0.5, 0.2, 3,
             0, 0, 0, 0, 0.5, sBulletRound, true, "Kamikaze");
             
 chaseRange = 256;
+loadTime = 200;
 </string>
           </argument>
         </arguments>
