@@ -23,4 +23,8 @@ if (reloadTimeInt < reloadTimeTar) {
             scrCreateCasing(x, y, -bulletSpread*3, bulletSpread*3, bulletSpd/2, bulletSpd);
         }
     }
+    
+    // Particles
+    part_type_direction(global.partBulletFire, unitAngle-32, unitAngle+32, 0, 0);
+    part_particles_create(global.pSysAbove, x, y, global.partBulletFire, irandom_range(4,8));
 }

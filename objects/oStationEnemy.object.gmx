@@ -122,6 +122,13 @@ if (selected == true) {
     hpBarAlphaTar = 1;
     draw_set_alpha(hpBarAlpha);
     draw_set_colour(c_white);
+    
+    //Draw money
+    draw_set_halign(fa_center);
+    draw_set_font(fntMed);
+    draw_text(x, y + 32, "AI Currency: " + string(global.enemyCurrency));
+    draw_set_halign(fa_left);
+    
     draw_rectangle(x - 16, y - 36 - 1, x + 16, y - 36 + 2, true);
     var pc = (hpDraw / maxHp) * 100;
     draw_healthbar(x - 16, y - 36, x + 16, y - 36 + 2, pc, 

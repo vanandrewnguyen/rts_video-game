@@ -140,6 +140,7 @@ if (!atTarget) {
           <argument>
             <kind>1</kind>
             <string>///Draw
+/*
 draw_set_colour(c_white);
 draw_text(x, y-32, command);
 draw_self();

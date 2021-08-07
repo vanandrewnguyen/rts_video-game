@@ -28,7 +28,7 @@
             <string>///Init
 global.difficulty = 3;
 timePassed = 0;
-timeWave = 0;
+timeWave = -60*8; //0;
 count = 0;
 
 /* Establish difficulty settings using a 2D array. 
@@ -59,10 +59,10 @@ dif[4,2] = 3;
 // Wait times to spawn in new units (seconds)
 bufferSpawnTime = 30; // to be added on top of first spawn (TODO)
 dif[0,3] = 8;
-dif[1,3] = 9;
-dif[2,3] = 13;
-dif[3,3] = 16;
-dif[4,3] = 18;
+dif[1,3] = 10;
+dif[2,3] = 14;
+dif[3,3] = 18;
+dif[4,3] = 24;
 
 // Attack waves (wait until this time to send most units)
 dif[0,4] = 60;
@@ -89,6 +89,27 @@ command[2, 1] = 0.1;
 command[3, 1] = 0.1;
 command[4, 1] = 0.1;
 command[5, 1] = 0.1;
+
+// Conditionals
+if (room == rmArenaBasicExt) {
+    global.difficulty = 2;
+    global.currency = 60;
+} else if (room == rmArenaBasic) {
+    global.difficulty = 1;
+    global.currency = 40;
+} else if (room == rmArenaMinimal) {
+    global.difficulty = 3;
+    global.currency = 400;
+} else if (room == rmArenaDoublePass) {
+    global.difficulty = 3;
+    global.currency = 150;
+} else if (room == rmArenaDuo) {
+    global.difficulty = 4;
+    global.currency = 100;
+} else if (room == rmArenaQuadFlank) {
+    global.difficulty = 4;
+    global.currency = 50;
+} 
 </string>
           </argument>
         </arguments>
@@ -293,7 +314,7 @@ if (timeWave &gt; (dif[d, 3]*60)) {
                     if (instance_number(oWorkerEnemy) &lt; 10) {
                         scrSpawnEnemy(xx+random_range(-64,64), yy, oWorkerEnemy, clusterInst);
                     } else {
-                        scrSpawnEnemy(xx+random_range(-64,64), yy, oKamikaze, clusterInst);
+                        scrSpawnEnemy(xx+random_range(-64,64), yy, oKamikazeEnemy, clusterInst);
                         clusterInst.command = "targetPlayerBase";
                     }
                 }
@@ -316,7 +337,7 @@ if (timeWave &gt; (dif[d, 3]*60)) {
                     if (instance_number(oWorkerEnemy) &lt; 10) {
                         scrSpawnEnemy(xx+random_range(-64,64), yy, oWorkerEnemy, clusterInst);
                     } else {
-                        scrSpawnEnemy(xx+random_range(-64,64), yy, oKamikaze, clusterInst);
+                        scrSpawnEnemy(xx+random_range(-64,64), yy, oKamikazeEnemy, clusterInst);
                         clusterInst.command = "targetPlayerBase";
                     }  
                 }
@@ -334,18 +355,18 @@ if (timeWave &gt; (dif[d, 3]*60)) {
                         var spawnInst = choose(oFreighterEnemy);
                         scrSpawnEnemy(xx+random_range(-64,64), yy, spawnInst, clusterInst);
                     } else {
-                        scrSpawnEnemy(xx+random_range(-64,64), yy, oKamikaze, clusterInst);
+                        scrSpawnEnemy(xx+random_range(-64,64), yy, oKamikazeEnemy, clusterInst);
                         clusterInst.command = "targetPlayerBase";
                     }
                 }
             } else if (currentCommand == "guardHighestMinefield" || currentCommand == "guardNearestMinefield") {
                 repeat(setClusterSize) {
-                    var spawnInst = choose(oSniperEnemy, oTankEnemy, oBomberEnemy, oFreighterEnemy);
+                    var spawnInst = choose(oSniperEnemy, oTankEnemy, oInfantryEnemy, oBomberEnemy, oFreighterEnemy);
                     scrSpawnEnemy(xx+random_range(-64,64), yy, spawnInst, clusterInst);
                 }
             } else {
                 repeat(setClusterSize*0.75) {
-                    var spawnInst = choose(oSniperEnemy, oTankEnemy, oInfantryEnemy, oWorkerEnemy);
+                    var spawnInst = choose(oSniperEnemy, oTankEnemy, oInfantryEnemy, oInfantryEnemy, oInfantryEnemy, oWorkerEnemy);
                     scrSpawnEnemy(xx+random_range(-64,64), yy, spawnInst, clusterInst);
                 }
             } 
@@ -408,6 +429,9 @@ if (timeWave &gt; (dif[d, 3]*60)) {
     
     // Reset
     timeWave = 0;
+    if (global.enemyCurrency &lt; 100) {
+        timeWave -= (100-global.enemyCurrency)*8;
+    }
     scrResetSpawnChances();
 }
 
@@ -434,7 +458,7 @@ if (timeWave &gt; (dif[d, 3]*60)) {
           <argument>
             <kind>1</kind>
             <string>///Debug Draw
-
+/*
 var xx = mouse_x + 32;
 var yy = mouse_y - 32;
 

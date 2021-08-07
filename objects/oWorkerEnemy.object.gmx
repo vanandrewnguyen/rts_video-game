@@ -76,8 +76,10 @@ if (loadInt &lt; loadTime) {
         // Goto nearest mine -&gt; here you make decisions based on clusters
         state = "findingMine"; 
         var inst = instance_nearest(x, y, oMiningPoint);
-        mineX = inst.x;
-        mineY = inst.y;
+        if (instance_exists(inst)) {
+            mineX = inst.x;
+            mineY = inst.y;
+        }
         loadCheck = true;
     }
 }
@@ -95,8 +97,10 @@ if (instance_exists(oStationEnemy)) {
                     // Goto nearest mine -&gt; here you make decisions based on clusters
                     state = "findingMine"; 
                     var inst = instance_nearest(x, y, oMiningPoint);
-                    mineX = inst.x;
-                    mineY = inst.y;
+                    if (instance_exists(inst)) {
+                        mineX = inst.x;
+                        mineY = inst.y;
+                    }
                 }
             break;
             case "move":

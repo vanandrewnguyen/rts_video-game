@@ -52,6 +52,9 @@ switch(argument0) {
         }
     break;
     case "selfDestruct": // Destroy Unit
+        var value = hp*5;
+        var inst = instance_create(x, y, oShipDeathCurrencyParticle);
+        inst.value = value;
         instance_destroy();
     break;
 }

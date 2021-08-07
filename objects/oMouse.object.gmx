@@ -155,7 +155,7 @@ if (mouse_check_button_pressed(mb_middle)) {
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>// Draw Icons
+            <string>/// Draw Icons
 var maxIcon = 5;
 var iconWidth = 16;
 for (var i=0;i&lt;maxIcon;i++) {
@@ -170,6 +170,23 @@ for (var i=0;i&lt;maxIcon;i++) {
     draw_sprite_ext(sMouseIcons, i, xx, yy, 
                     iconScale[i], iconScale[i], 0, c_white, 1);
 }
+
+//Draw money
+var str = "Currency: " + string(global.currency);
+var strLen = string_width(str);
+draw_set_alpha(0.5);
+draw_set_colour(global.colDarkestBlue);
+draw_roundrect(global.GUIWidth/2 - strLen + 4, 32, 
+               global.GUIWidth/2 + strLen - 8, 46, false);
+draw_set_alpha(1);
+
+draw_set_colour(c_white);
+draw_set_halign(fa_center);
+draw_set_font(fntMed);
+draw_text(global.GUIWidth/2, 32, str);
+draw_set_halign(fa_left);
+
+
 </string>
           </argument>
         </arguments>

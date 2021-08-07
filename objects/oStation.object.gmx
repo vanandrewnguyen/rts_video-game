@@ -52,6 +52,7 @@ bottomYScale = 1;
 bottomRot = 0; 
 hpBarAlpha = 0;
 hpBarAlphaTar = 0;
+drawAngle = 0;
 </string>
           </argument>
         </arguments>
@@ -215,11 +216,18 @@ if (state == "selected") {
         var yy = y + (i-factoryAnim) * fHeight;
         var xx = x;
         var xxTar = xx;
+        var len = 4;
+        var dir = (i-factoryAnimTar)*-24;
         
         // Conditional targeting
         if (i == factoryAnimTar) {
+            draw_set_colour(global.colDarkestBlue);
+            var strLen = string_width(factoryBuildIndex[i,0]) + string_width("$"+string(factoryBuildIndex[i,1]))
+            draw_set_alpha(0.5);
+            draw_roundrect(xx + 32 - 4, yy - fHeight, xx + 32 + strLen + 16, yy - fHeight + 16, false);
+            draw_set_alpha(1);
             draw_set_colour(c_white);
-            xxTar = x + 16 + 24 * sin(current_time/128); 
+            xxTar = x + 16 + 24 * sin(current_time/256); 
         } else {
             draw_set_colour(global.colLightBlue);
             xxTar = x;
@@ -227,8 +235,6 @@ if (state == "selected") {
         xx = lerp(xx, xxTar, 0.1);
         
         // Final Drawing Pass
-        var len = 4;
-        var dir = (i-factoryAnimTar)*-24;
         // If inputs are nearby target drawn
         if (i+2 &gt; factoryAnimTar &amp;&amp; i-2-1 &lt; factoryAnimTar) {
             draw_text_transformed(xx + 32 + lengthdir_x(len, dir), 
@@ -272,7 +278,7 @@ if (state == "selected") {
     var pc2 = (currentShipSpd / maxShipSpd) * 100;
     draw_healthbar(x - leftGap, y - upGap + heightGap, 
                    x - leftGap - width, y - upGap + height + heightGap, pc2,
-                   c_white, global.colSatLightBlue, global.colSatLightBlue, 0, false, true);
+                   c_white, global.colSatLightBlue, global.colSatLightBlue, 0, false, false);
                    
     draw_set_colour(global.colLightPink);
     var pc3 = (currentShipDmg / maxShipDmg) * 100;
