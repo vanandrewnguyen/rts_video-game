@@ -170,7 +170,7 @@ draw_set_alpha(1);
 if (global.timeflow == 0) {
     with (oUnitParent) {
         draw_sprite_ext(sprite_index, image_index, x+random_range(-1,1), y+random_range(-1,1), 
-                        1, 1, drawAngle+90, c_white, 0.2);
+                        1, 1, drawAngle-90, c_white, 0.2);
     }
 }
 </string>

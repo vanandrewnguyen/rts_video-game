@@ -25,3 +25,8 @@ inst.decaySprite = decaySprite;
 inst.psIndex = particleIndex;
 inst.trail = trail;
 
+
+// Exemptions - Gravity Wave
+if (sprite == sBulletGravity) {
+    inst.image_alpha = 0.25;
+}

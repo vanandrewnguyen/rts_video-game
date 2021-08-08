@@ -90,15 +90,19 @@ if (unitType == "Kamikaze") {
             <string>///Move
 
 // Use finite state machine
-if (global.timeflow == 1 &amp;&amp; !stunned) {
-    switch(state) {
-        case "idle":
-            scrUnitIdle();
-        break;
-        case "move":
-            scrUnitMove();
-        break;
-    }   
+if (global.timeflow == 1) {
+    if (!stunned) {
+        switch(state) {
+            case "idle":
+                scrUnitIdle();
+            break;
+            case "move":
+                scrUnitMove();
+            break;
+        }   
+    } else {
+        scrUnitIdle();
+    }
     x += hsp; 
     y += vsp; 
 }
@@ -233,8 +237,15 @@ if (abs(hsp) &gt;= (maxSpd/4) || abs(vsp) &gt;= (maxSpd/4)) {
 
 // Draw Self
 drawAngle += sin(degtorad(unitAngle - drawAngle)) * (15 - weight);
-draw_sprite_ext(sprite_index, image_index, x, y, xScale, yScale, drawAngle-90, c_white, alpha);
-
+if (dmgFlashDraw) {
+    d3d_set_fog(true, c_white, 0, 1);
+    draw_sprite_ext(sprite_index, image_index, x, y, xScale, yScale, 
+                    drawAngle-90, c_white, alpha);
+    d3d_set_fog(false, c_white, 0, 0);
+} else {
+    draw_sprite_ext(sprite_index, image_index, x, y, xScale, yScale, 
+                    drawAngle-90, c_white, alpha);
+}
 if (selected) {
     draw_set_colour(c_white);
     draw_set_alpha(0.25);

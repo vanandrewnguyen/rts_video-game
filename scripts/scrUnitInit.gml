@@ -63,5 +63,5 @@ alpha = 1;
 hpBarAlpha = 0;
 hpBarAlphaTar = 0;
 t = 0;
-
+dmgFlashDraw = 0;
 

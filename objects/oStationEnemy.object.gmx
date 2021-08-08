@@ -47,6 +47,34 @@ hpBarAlphaTar = 0;
         </arguments>
       </action>
     </event>
+    <event eventtype="1" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>///Create Boss
+event_inherited();
+
+if (global.difficulty &gt;= 4 &amp;&amp; !instance_exists(oGravityBoss)) {
+    instance_create(x, y, oGravityBoss);
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
     <event eventtype="3" enumb="0">
       <action>
         <libid>1</libid>
@@ -126,7 +154,7 @@ if (selected == true) {
     //Draw money
     draw_set_halign(fa_center);
     draw_set_font(fntMed);
-    draw_text(x, y + 32, "AI Currency: " + string(global.enemyCurrency));
+    draw_text(x, y + 32, "AI Currency: " + string(round(global.enemyCurrency)));
     draw_set_halign(fa_left);
     
     draw_rectangle(x - 16, y - 36 - 1, x + 16, y - 36 + 2, true);

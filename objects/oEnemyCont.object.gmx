@@ -379,7 +379,7 @@ if (timeWave &gt; (dif[d, 3]*60)) {
                 }
             } else if (currentCommand == "guardHighestMinefield" || currentCommand == "guardNearestMinefield") {
                 repeat(setClusterSize) {
-                    var spawnInst = choose(oSniperEnemy, oInfantryEnemy, oInfantryEnemy, oWorkerEnemy, oWorkerEnemy);
+                    var spawnInst = choose(oSniperEnemy, oInfantryEnemy, oInfantryEnemy, oWorkerEnemy, oWorkerEnemy, oGravityBoss);
                     scrSpawnEnemy(xx+random_range(-64,64), yy, spawnInst, clusterInst);
                 }
             } else {

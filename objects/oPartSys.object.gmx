@@ -76,6 +76,9 @@ if (room == rmArenaBasicExt) {
 if (room == rmOverworldMenu) {
     scrInitPartAmbientSmokePink(1);
 }
+
+// Surfaces 
+
 </string>
           </argument>
         </arguments>
