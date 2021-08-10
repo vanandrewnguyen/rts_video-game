@@ -53,7 +53,7 @@ plot[plotLength, 0] = ex;
 plot[plotLength, 1] = sy;
 
 // Set Names
-plot[0, 2] = "";
+plot[0, 2] = "Sol";
 plot[1, 2] = "Gliese";
 plot[2, 2] = "Leonis";
 plot[3, 2] = "Altair";
@@ -69,7 +69,7 @@ plot[3, 3] = rmArenaDoublePass;
 plot[4, 3] = rmArenaMinimal;
 plot[5, 3] = rmArenaDuo;
 plot[6, 3] = rmArenaQuadFlank;
-plot[7, 3] = noone;
+plot[7, 3] = rmArenaDuoFlank;
 
 // Draw Var
 drawAngle = 0;
@@ -155,7 +155,7 @@ for (var i=0;i&lt;plotIndex;i++) {
     draw_line_width(plot[i, 0],
                     plot[i, 1],
                     plot[i+1, 0],
-                    plot[i+1, 1], 2);
+                    plot[i+1, 1], 2 + i/6 + 0.25*sin(t / 32));
 }
 for (var i=0;i&lt;plotLength;i++) {
     var rad = 5 + 2*sin(t / 32);

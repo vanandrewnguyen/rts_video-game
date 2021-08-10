@@ -41,6 +41,7 @@ spd = 0;
 
 alarm[1] = 120;
 
+laserLife = 30;
 </string>
           </argument>
         </arguments>
@@ -176,6 +177,70 @@ if (scrChance(0.75)) {
             <string>///Freeze
 image_index = 1;
 image_speed = 0;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="8" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>///Draw (Exemption - Laser)
+draw_self();
+
+// Laser
+if (!instance_exists(oUnitParent)) { exit; }
+if (sprite_index == sBulletLaser) {
+    if (instance_exists(oLaserBoss)) {
+        var inst = instance_nearest(x, y, oLaserBoss);
+        if (instance_exists(inst) &amp;&amp; point_distance(x, y, inst.x, inst.y) &lt; 16) {
+            image_angle = inst.drawAngle;
+        }
+    }
+    
+    var len = 0;
+    var maxLen = 512;
+    var inc = 4;
+    var xx = x+lengthdir_x(len, image_angle);
+    var yy = y+lengthdir_y(len, image_angle);
+    while (len &lt; maxLen &amp;&amp; !place_meeting(x+lengthdir_x(len, image_angle), 
+                                          y+lengthdir_y(len, image_angle), oUnitParent)) {
+        xx = x+lengthdir_x(len, image_angle);
+        yy = y+lengthdir_y(len, image_angle);
+        part_particles_create(global.pSysBelow, xx+random_range(-2,2), yy+random_range(-2,2), 
+                              global.partShipEnemyTrail, choose(0,1));
+        len += inc;
+    }
+    if (place_meeting(x+lengthdir_x(len, image_angle), y+lengthdir_y(len, image_angle), oUnitParent)) {
+        draw_sprite_ext(sBulletDecay, 1, xx, yy, 1, 1, image_angle, c_white, 1);
+        
+        scrCreateBullet(team, xx, yy, dir, 4,
+                        4, dmg, sBulletRound, sBulletDecay,
+                        -1, sBulletTrail);
+    }
+    draw_set_colour(global.colLightPink);
+    scrDrawLightning(x, y, xx, yy, 4, 12, 16, 36);
+    draw_set_colour(c_white);
+    scrDrawLightning(x, y, xx, yy, 4, 12, 4, 12);
+    //draw_set_colour(c_white);
+    
+    laserLife--;
+    if (laserLife &lt;= 0) { instance_destroy(); }
+}
 </string>
           </argument>
         </arguments>

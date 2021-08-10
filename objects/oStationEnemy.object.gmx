@@ -67,9 +67,14 @@ hpBarAlphaTar = 0;
             <string>///Create Boss
 event_inherited();
 
-if (global.difficulty &gt;= 4 &amp;&amp; !instance_exists(oGravityBoss)) {
-    instance_create(x, y, oGravityBoss);
+if (room == rmArenaDuoFlank) {
+    instance_create(x, y, oLaserBoss);
+} else {
+    if (global.difficulty &gt;= 4 &amp;&amp; !instance_exists(oGravityBoss)) {
+        instance_create(x, y, oGravityBoss);
+    }
 }
+
 </string>
           </argument>
         </arguments>

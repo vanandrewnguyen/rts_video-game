@@ -33,6 +33,14 @@ scrUnitInit(ENEMYINDEX, 2, 2.5, 0.5, 0.2, 3,
             
 chaseRange = 256;
 loadTime = 200;
+
+// Drawing Variables for Cloth-like tail
+tailNum = 12;
+for (var i=0;i&lt;tailNum;i++) {
+  tailX[i] = x; 
+  tailY[i] = y; 
+}            
+
 </string>
           </argument>
         </arguments>
@@ -66,6 +74,53 @@ if (other.teamIndex != teamIndex) {
     scrCreateExplosion(x, y, sExplosionColour, true, 2, 32, 32, sExplosionSquareBig);
     instance_destroy();
 }
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="8" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>///Draw Tail
+event_inherited();
+
+// We define the last tail first, and attach it to our ship.
+// Then, we define the rest using a loop. 
+var lerpDelay = 0.2;
+var lerpBase = 0.6;
+tailX[tailNum] = lerp(tailX[tailNum-2], x, lerpBase);
+tailY[tailNum] = lerp(tailY[tailNum-2], y, lerpBase);
+for(var i=(tailNum-1);i&gt;0;i-=1) {
+    tailX[i] = lerp(tailX[i], tailX[i+1], lerpDelay+(i/(tailNum*2)));
+    tailY[i] = lerp(tailY[i], tailY[i+1], lerpDelay+(i/(tailNum*2))); 
+    var width = clamp((tailX[i]-tailX[i+1]), -8, 8);
+    var height = clamp((tailY[i]-tailY[i+1]), -8, 8);
+    draw_set_blend_mode(bm_add);
+    draw_set_colour(global.colLightPink);
+    draw_line_width(tailX[i], tailY[i], tailX[i+1], tailY[i+1], 2+i/4);
+    draw_ellipse(tailX[i], tailY[i],
+                 tailX[i]+width, 
+                 tailY[i]+height, false);
+    draw_set_colour(c_white);
+    draw_set_blend_mode(bm_normal);
+}
+
+    
 </string>
           </argument>
         </arguments>

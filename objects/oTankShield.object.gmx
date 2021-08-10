@@ -38,6 +38,12 @@ active = true;
 alpha = 0;
 alphaTar = 0.5;
 damageThreshold = 1;
+
+for (var i=0;i&lt;radiusOrigin;i++) {
+    xx[i] = 0; 
+    yy[i] = 0;
+    len[i] = 0;
+}
 </string>
           </argument>
         </arguments>
@@ -92,7 +98,7 @@ if (instance_exists(owner)) {
 } else { instance_destroy(); }
 
 if (active) { 
-    alphaTar = 0.1  + 0.025*sin(t/48); 
+    alphaTar = 0.4  + 0.025*sin(t/48); 
     radiusTar = radiusOrigin + 2*sin(t/32); 
     if (instance_exists(owner)) {
         // Heal itself
@@ -100,7 +106,7 @@ if (active) {
             owner.hp += 0.01;
         }
     }
-} else { alphaTar = 0; radiusTar = radiusOrigin/2; }
+} else { alphaTar = 0.2; radiusTar = radiusOrigin*0.8; }
 
 // Take the hit
 if (instance_exists(oBullet) &amp;&amp; instance_exists(owner)) {
@@ -155,6 +161,65 @@ var inertia = 0.5; //0 is no inertia, 1 is no movement
 radiusRate = lerp((radiusTar - radius), spd, inertia)-0.5*radiusRate;
 radius += radiusRate;
 
+draw_primitive_begin(pr_trianglefan);
+for (var i=0;i&lt;radiusOrigin;i++) {
+    // Create a series of circular point
+    var angleInc = 360 / radiusOrigin;
+    len[i] = lerp(len[i], radiusTar, 0.1);
+    xx[i] = lerp(xx[i], lengthdir_x(len[i], angleInc*i), 0.1); 
+    yy[i] = lerp(yy[i], lengthdir_y(len[i], angleInc*i), 0.1); 
+    
+    // Apply some kind of force relationship between adjacent points
+    if (i &gt; 0 &amp;&amp; i &lt; radiusOrigin-1) {
+        if (len[i-1] &gt; radiusOrigin+1 || len[i-1] &lt; radiusOrigin-1) {
+            len[i] += (len[i-1] - len[i])/4;
+        }
+        if (len[i+1] &gt; radiusOrigin+1 || len[i+1] &lt; radiusOrigin-1) {
+            len[i] += (len[i+1] - len[i])/4;
+        }
+    }
+    if (i == radiusOrigin) {
+        if (len[0] &gt; radiusOrigin+1 || len[0] &lt; radiusOrigin-1) {
+            len[i] += (len[0] - len[i])/4;
+        }
+    }
+    if (i == 0) {
+        if (len[radiusOrigin-1] &gt; radiusOrigin+1 || len[radiusOrigin-1] &lt; radiusOrigin-1) {
+            len[i] += (len[radiusOrigin-1] - len[i])/4;
+        }
+    }
+    
+    // Set Drawing Var
+    var finalX = x+xx[i];
+    var finalY = y+yy[i];
+    var jump = 8;
+    
+    // Collision with Bullet
+    if (instance_exists(oBullet) &amp;&amp; global.timeflow == 1) {
+        var inst = instance_position(finalX, finalY, oBullet);
+        if (inst != noone) {
+            var dis = point_distance(x, y, inst.x, inst.y);
+            if (dis &lt; len[i]) {
+                len[i] += jump;
+            } else {
+                len[i] -= jump*1.5;
+            }   
+        }
+    }   
+    
+    // Clamp
+    len[i] = clamp(len[i], radiusOrigin-jump*3, radiusOrigin+jump*2);
+    
+    // Drawing
+    draw_set_alpha(alpha);
+    draw_set_colour(c_white);
+    draw_vertex(finalX, finalY);
+    draw_circle(finalX, finalY, 1, true);
+    draw_set_alpha(1);
+}
+draw_primitive_end();
+
+/* Old Circle code
 draw_set_alpha(alpha);
 draw_set_colour(c_white);
 draw_circle(x, y, radius, false);

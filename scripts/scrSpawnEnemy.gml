@@ -16,7 +16,7 @@ switch(shipID) {
 if (shipID == oGravityBoss) {
     var num = instance_number(oGravityBoss);
     if (num >= 1) {
-        shipID = oTank;
+        shipID = oTankEnemy;
     }
 }   
 
@@ -25,6 +25,6 @@ if (global.enemyCurrency >= cost) {
     var inst = instance_create(argument0+random_range(-64,64), argument1, shipID);
     inst.clusterTarget = argument3;
 } else {
-    global.enemyCurrency += 10;
+    global.enemyCurrency += 20*global.difficulty*1.5;
 }
 

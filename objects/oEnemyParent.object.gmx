@@ -155,6 +155,10 @@ scrReturnSquish(1, 0.2);
 // Particles
 if (abs(hsp) &gt;= (maxSpd/4) || abs(vsp) &gt;= (maxSpd/4)) {
     part_particles_create(global.pSysBelow, x, y, global.partShipEnemyTrail, choose(0,1));
+    if (sprite_index == sBomber) {
+        part_particles_create(global.pSysBelow, x, y, 
+                              global.partDeathCurrency, choose(0,1));
+    }
 }
 
 

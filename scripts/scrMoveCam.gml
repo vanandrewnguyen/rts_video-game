@@ -42,9 +42,9 @@ if (instance_exists(oStation)) {
 
 // Clamp Cam to bounds
 view_xview[camIndex] = clamp(view_xview[camIndex], 
-                             -camBuffer, room_width + camBuffer - camFrameWidth);
+                             -camBuffer, room_width - camFrameWidth); //+ camBuffer
 view_yview[camIndex] = clamp(view_yview[camIndex], 
-                             -camBuffer, room_height + camBuffer - camFrameHeight);
+                             -camBuffer, room_height - camFrameHeight);
 
 
 

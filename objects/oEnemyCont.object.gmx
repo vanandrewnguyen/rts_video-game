@@ -109,6 +109,9 @@ if (room == rmArenaBasicExt) {
 } else if (room == rmArenaQuadFlank) {
     global.difficulty = 4;
     global.currency = 50;
+} else if (room == rmArenaDuoFlank) {
+    global.difficulty = 4;
+    global.currency = 50;
 } 
 </string>
           </argument>
