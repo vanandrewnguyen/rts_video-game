@@ -49,11 +49,20 @@ for(var i=0;i&lt;asteroidNumber;i++) {
     asteroid[i,8] = asteroid[i,0];
 }
 
+// Drawing Var
 xScale = 1;
 yScale = 1;
 radAlpha = 0;
 radAlphaTar = 0;
 
+arrayLen = 48;
+radiusOrigin = 48;
+radiusTar = 0;
+for (var i=0;i&lt;arrayLen;i++) {
+    xx[i] = 0; 
+    yy[i] = 0;
+    len[i] = 0;
+}
 </string>
           </argument>
         </arguments>
@@ -137,20 +146,76 @@ if (totalMines &lt;= 0) {
 if (global.timeflow == 1) { time++; }
 var ratio = (totalMines / maxMines);
 
+// Draw Bubble
+radiusTar = radiusOrigin;
+radAlpha = lerp(radAlpha, radAlphaTar, 0.2);
+// Edges cases
+if (len[0] &gt; radiusOrigin+1 || len[0] &lt; radiusOrigin-1) {
+    len[arrayLen-1] += (len[0] - len[arrayLen-1])/4;
+}
+if (len[arrayLen-1] &gt; radiusOrigin+1 || len[arrayLen-1] &lt; radiusOrigin-1) {
+    len[0] += (len[arrayLen-1] - len[0])/4;
+}
+for (var i=0;i&lt;arrayLen;i++) {
+    // Create a series of circular point
+    var angleInc = 360 / radiusOrigin;
+    len[i] = lerp(len[i], radiusTar, 0.1);
+    xx[i] = lerp(xx[i], lengthdir_x(len[i], angleInc*i), 0.1); 
+    yy[i] = lerp(yy[i], lengthdir_y(len[i], angleInc*i), 0.1); 
+    
+    // Apply some kind of force relationship between adjacent points
+    if (i &gt; 0 &amp;&amp; i &lt; arrayLen-1) {
+        if (len[i-1] &gt; radiusOrigin+1 || len[i-1] &lt; radiusOrigin-1) {
+            len[i] += (len[i-1] - len[i])/4;
+        }
+        if (len[i+1] &gt; radiusOrigin+1 || len[i+1] &lt; radiusOrigin-1) {
+            len[i] += (len[i+1] - len[i])/4;
+        }
+    }
+    
+    // Set Drawing Var
+    var finalX = x+xx[i];
+    var finalY = y+yy[i];
+    var jump = 16;
+    
+    // Collision with Bullet
+    if (instance_exists(oEntityParent) &amp;&amp; global.timeflow == 1) {
+        var inst = instance_position(finalX, finalY, oEntityParent);
+        if (inst != noone) {
+            if (abs(inst.hsp) &gt; 0.5 || (abs(inst.vsp) &gt; 0.5)) {
+                var dis = point_distance(x, y, inst.x, inst.y);
+                if (dis &lt; len[i]) {
+                    len[i] += jump;
+                } else {
+                    len[i] -= jump*1.5;
+                }   
+            }
+        }
+    }   
+    
+    // Clamp
+    len[i] = clamp(len[i], radiusOrigin-jump*4, radiusOrigin+jump*4);
+    
+    // Drawing
+    draw_set_alpha(radAlpha/2);
+    draw_set_colour(c_white);
+    draw_circle(finalX, finalY, 1, false);
+    draw_set_alpha(1);
+}
+
 // Draw Asteroids
 for(var i=0;i&lt;asteroidNumber;i++) {
     var angle = asteroid[i,3] + (time * asteroid[i,5]);
     var rot = asteroid[i,3] + (time * asteroid[i,4]);
-    var xx = x + lengthdir_x(asteroid[i,0], angle);
-    var yy = y + lengthdir_y(asteroid[i,0], angle);
+    var ax = x + lengthdir_x(asteroid[i,0], angle);
+    var ay = y + lengthdir_y(asteroid[i,0], angle);
     asteroid[i,0] = asteroid[i,8] * ratio + 32;
     asteroid[i,6] = asteroid[i,7] * ratio + 0.25;
-    draw_sprite_ext(asteroid[i,1], asteroid[i,2], xx, yy, 
+    draw_sprite_ext(asteroid[i,1], asteroid[i,2], ax, ay, 
                     asteroid[i,6]*xScale, asteroid[i,6]*yScale, rot, c_white, 1);
 }
 
 // Draw radius
-radAlpha = lerp(radAlpha, radAlphaTar, 0.2);
 if (instance_exists(oUnitParent)) {
     var inst = instance_nearest(x, y, oUnitParent);
     var dis = point_distance(x, y, inst.x, inst.y);
@@ -158,11 +223,12 @@ if (instance_exists(oUnitParent)) {
     } else { radAlphaTar = 0; }
 } else { radAlphaTar = 0; }
 
+/*
 draw_set_alpha(radAlpha);
 draw_set_colour(c_white);
 draw_circle(x, y, sprite_width/2, true);
 draw_set_alpha(1);
-
+*/
 
 //draw_text(x, y-32, "mines left: "+string(totalMines));
 
