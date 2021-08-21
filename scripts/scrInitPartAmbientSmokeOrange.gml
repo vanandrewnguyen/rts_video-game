@@ -17,7 +17,7 @@ part_type_orientation(pt, 0, 360, 0, 2, 0);
 part_type_life(pt, 180, 450);
 part_type_blend(pt, true);
 part_type_alpha3(pt, 0.001, 0.02, 0.001);
-part_type_colour3(pt, global.colLightOrange, global.colLightOrange, global.colLightOrange);
+part_type_colour3(pt, global.colLightOrange, global.colDarkOrange, global.colLightOrange);
 
 
 

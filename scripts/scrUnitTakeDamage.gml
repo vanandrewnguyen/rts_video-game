@@ -41,6 +41,27 @@ if (instance_exists(oBullet)) {
             }
         }
         
+        // Audio
+        switch (unitType) {
+            case "worker": scrPlayAudio(oAudioCont.audioEmImpact, sndShipHitSmall, 0.9, 1.1, 
+                                        0.7, 0.8, x, y, 4); break;
+            case "freighter": scrPlayAudio(oAudioCont.audioEmImpact, sndShipHitMedium, 0.9, 1.1, 
+                                           0.7, 0.8, x, y, 4); break;
+            case "infantry": scrPlayAudio(oAudioCont.audioEmImpact, sndShipHitSmall, 0.9, 1.1, 
+                                          0.7, 0.8, x, y, 4); break;
+            case "bomber": scrPlayAudio(oAudioCont.audioEmImpact, sndShipHitMedium, 0.9, 1.1, 
+                                        0.7, 0.8, x, y, 4); break;
+            case "Kamikaze": scrPlayAudio(oAudioCont.audioEmImpact, sndShipHitSmall, 0.9, 1.1, 
+                                          0.7, 0.8, x, y, 4); break;
+            case "Sniper": scrPlayAudio(oAudioCont.audioEmImpact, sndShipHitBig, 0.9, 1.1, 
+                                        0.7, 0.8, x, y, 4); break;
+            case "tank": scrPlayAudio(oAudioCont.audioEmImpact, sndShipHitBig, 0.9, 1.1, 
+                                      0.7, 0.8, x, y, 4); break;
+            default: scrPlayAudio(oAudioCont.audioEmImpact, sndShipHitBig, 0.9, 1.1, 
+                                  0.7, 0.8, x, y, 4);
+        }
+        
+        // Destroy the bullet
         with(inst) { 
             if (sprite_index != sBulletGravity) {
                 instance_destroy(); 

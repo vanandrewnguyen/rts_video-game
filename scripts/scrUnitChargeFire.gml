@@ -27,4 +27,23 @@ if (reloadTimeInt < reloadTimeTar) {
     // Particles
     part_type_direction(global.partBulletFire, unitAngle-32, unitAngle+32, 0, 0);
     part_particles_create(global.pSysAbove, x, y, global.partBulletFire, irandom_range(4,8));
+    
+    // Audio
+    switch (bulletSprite) {
+        case sBullet: scrPlayAudio(oAudioCont.audioEmCombat, sndShipFireSmall, 0.9, 1.1, 
+                                   0.7, 0.8, x, y, 5); break;
+        case sBulletRound: scrPlayAudio(oAudioCont.audioEmCombat, sndShipFireSmall, 0.9, 1.1, 
+                                        0.4, 0.5, x, y, 5); break;
+        case sBulletSniper: scrPlayAudio(oAudioCont.audioEmCombat, sndShipFireSniper, 0.9, 1.1, 
+                                         0.7, 0.8, x, y, 5); break;
+        case sBulletEMP: scrPlayAudio(oAudioCont.audioEmCombat, sndShipFireEMP, 0.9, 1.1, 
+                                      0.7, 0.8, x, y, 5); break;
+        case sBulletBomber: scrPlayAudio(oAudioCont.audioEmCombat, sndShipFireMedium, 0.9, 1.1, 
+                                         0.7, 0.8, x, y, 5); break;
+        case sBulletLaser: scrPlayAudio(oAudioCont.audioEmCombat, sndShipFireMedium, 0.9, 1.1, 
+                                        0.7, 0.8, x, y, 5); break;
+        case sBulletGravity: scrPlayAudio(oAudioCont.audioEmCombat, sndShipFireBoss, 0.9, 1.1, 
+                                          0.7, 0.8, x, y, 5); break;
+    }
+    
 }

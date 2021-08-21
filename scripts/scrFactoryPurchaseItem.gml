@@ -16,5 +16,7 @@ var inst = instance_create(xx, yy, factoryBuildIndex[factoryAnimTar,4]);
 // Subtract the fees
 global.currency -= factoryBuildIndex[factoryAnimTar, 1];
 
-
+// Audio
+scrPlayAudio(oAudioCont.audioEmUI, sndButtonPress2, 
+             0.5, 0.6, 0.6, 0.7, x, y, 3);
 
