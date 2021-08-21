@@ -3,7 +3,7 @@
   <spriteName>&lt;undefined&gt;</spriteName>
   <solid>0</solid>
   <visible>-1</visible>
-  <depth>-1</depth>
+  <depth>0</depth>
   <persistent>0</persistent>
   <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
@@ -26,39 +26,20 @@
           <argument>
             <kind>1</kind>
             <string>///Init
+txt = "Sol System";
 
-// Cam Variables
-camX = 0;
-camY = 0;
-camMaxSpd = 4;
-camIndex = 0;
-camBuffer = 64;
-camLock = false;
+font = fntTitle;
+charWidth = 12;
 
-// Zooming Variables
-camZoomBase = 320;
-camZoomMin = 256;
-camZoomMax = 1280//640;
-camZoomLerp = 0.1;
-
-// Framing Variables
-camFrameWidth = camZoomBase;
-camFrameHeight = camZoomBase/16*9;
-
-// Speed Variables
-hsp = 0;
-vsp = 0;
-camAcc = 1;
-
-// Shake Variables
-mag = 0;
-magLerp = 0.2;
+tx = room_width/2;
+ty = room_height/2 - 64;
+t = 0;
 </string>
           </argument>
         </arguments>
       </action>
     </event>
-    <event eventtype="3" enumb="0">
+    <event eventtype="8" enumb="0">
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -75,37 +56,33 @@ magLerp = 0.2;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>///Move
+            <string>///Draw
+t++;
 
-camFrameHeight = (camFrameWidth/16)*9;
+draw_set_font(font);
 
-// Zooming the camera frame
-camMaxSpd = view_wview[camIndex]/75;
-if (!camLock) {
-    if (mouse_wheel_up()) { scrZoomCam(-0.1,camIndex); }
-    if (mouse_wheel_down()) { 
-        if (view_xview[camIndex] &gt;= -camBuffer) { scrZoomCam(0.1,camIndex); }
-    }
+// Loop through characters and draw them at offsets for some interesting patterns
+var strlen = string_length(txt);
+var totalWidth = strlen*charWidth;
+for (var i=1;i&lt;strlen+1;i++) {
+    var baseX = tx + charWidth*i - totalWidth/2;
+    var baseY = ty;    
+    // Create the offsets
+    var x1 = baseX + (2 * sin(i + t / 16));
+    var y1 = baseY + (2 * cos(i + t / 20));
+    var x2 = baseX + (2 * sin(i - 1 + t / 16));
+    var y2 = baseY + (2 * cos(i - 1 + t / 20));
+    var x3 = baseX + (2 * sin(i - 2 + t / 16));
+    var y3 = baseY + (2 * cos(i - 2 + t / 20));
+    // Then draw the text at different coords and colours
+    draw_set_colour(global.colDarkPink);
+    draw_text(x3, y3, string_char_at(txt, i));
+    draw_set_colour(global.colLightPink);
+    draw_text(x2, y2, string_char_at(txt, i));
+    draw_set_colour(c_white);
+    draw_text(x1, y1, string_char_at(txt, i));
 }
-scrMoveCam();
 
-// Approach the intended view frame
-view_wview[camIndex] = lerp(view_wview[camIndex], camFrameWidth, camZoomLerp);
-view_hview[camIndex] = lerp(view_hview[camIndex], (camFrameWidth/16)*9, camZoomLerp);
-
-// Parallax Background (lower number = faster background)
-var renderDis1 = 32;
-var renderDis2 = 15;
-var renderDis3 = 10;
-background_alpha[1] = 0.75;
-background_alpha[2] = 0.25;
-background_alpha[3] = 0.5;
-background_x[1] = round(view_xview/renderDis1 - hsp);
-background_x[2] = round(view_xview/renderDis2 - hsp);
-background_x[3] = round(view_xview/renderDis3 - hsp);
-background_y[1] = round(view_yview/renderDis1 - vsp);
-background_y[2] = round(view_yview/renderDis2 - vsp);
-background_y[3] = round(view_yview/renderDis3 - vsp);
 
 </string>
           </argument>

@@ -43,7 +43,15 @@ menuItem[2, 1] = "Sound Effects";
 menuItem[3, 1] = "Screen Size";
 menuItem[4, 1] = "Fullscreen";
 
+menuItem[0, 2] = "Back";
+menuItem[1, 2] = "Credits";
+menuItem[2, 2] = "An game by Van Andrew";
+menuItem[3, 2] = "Sol System is open source!";
+menuItem[4, 2] = "github.com/vanandrewnguyen/rts_video-game";
+
 menuLength = array_height_2d(menuItem);
+menuWidth = 64;
+menuWidthTar = 64;
 
 
 // Draw var
@@ -92,6 +100,9 @@ if (keyboard_check_pressed(vk_down) || keyboard_check_pressed(ord("S")) ||
     } else {
         menuCursor = 0;
     } 
+    // Audio
+    scrPlayAudio(oAudioCont.audioEmUI, sndButtonPress1, 
+                 0.9, 1.1, 0.9, 1.1, room_width/2, room_height/2, 3);
 }
 if (keyboard_check_pressed(vk_up) || keyboard_check_pressed(ord("W")) ||
     mouse_wheel_up()) {
@@ -100,6 +111,9 @@ if (keyboard_check_pressed(vk_up) || keyboard_check_pressed(ord("W")) ||
     } else {
         menuCursor = menuLength-1;
     }
+    // Audio
+    scrPlayAudio(oAudioCont.audioEmUI, sndButtonPress1, 
+                 0.9, 1.1, 0.9, 1.1, room_width/2, room_height/2, 3);
 }
 
 // Action
@@ -108,42 +122,60 @@ if (keyboard_check_pressed(vk_space) || keyboard_check_pressed(vk_enter) ||
     switch(menuCursor) {
         case 0:
             if (state == 0) {
+                // Start Campaign
                 room_goto(rmOverworldMenu);
             } else if (state == 1) {
+                // Return to main
                 state = 0;
                 menuCursor = 2;
+            } else if (state == 2) {
+                // Return to main
+                state = 0;
+                menuCursor = 3;
+                menuWidthTar = 64;
             }
         break;
         case 1:
             if (state == 0) {
+                // Sandbox
                 room_goto(rmArenaSandbox);
             } else if (state == 1) {
-                
+                // Toggle ambient sound
             }
         break;
         case 2:
             if (state == 0) {
+                // Open options menu
                 state = 1;
                 menuCursor = 0;
             } else if (state == 1) {
-                
+                // Toggle Sound effects
             }
         break;
         case 3:
             if (state == 0) {
-                
+                // Open credits
+                state = 2;
+                menuCursor = 0;
+                menuWidthTar = 128;
             } else if (state == 1) {
-                
+                // Toggle screen sizing
             }
         break;
         case 4:
             if (state == 0) {
+                // Exit game
                 game_end();
             } else if (state == 1) {
-                
+                // Toggle fullscreen
+            } else if (state == 2) {
+                url_open('https://github.com/vanandrewnguyen/rts_video-game');
             }
         break;
     }
+    // Audio
+    scrPlayAudio(oAudioCont.audioEmUI, sndButtonPress1, 
+                 0.5, 0.6, 0.9, 1.1, room_width/2, room_height/2, 3);
 }
 
 // BG
@@ -189,17 +221,21 @@ t++;
 var bW = 64;
 var pad = 16;
 var height = 16;
+var bgYInc0 = 4*sin(t / 32);
+var bgYInc1 = 4*sin(t / 36);
+var bgYInc2 = 4*sin(t / 40);
+menuWidth = lerp(menuWidth, menuWidthTar, 0.1);
 bgY[0] = lerp(bgY[0], room_height, 0.05);
 bgY[1] = lerp(bgY[1], room_height, 0.04);
 bgY[2] = lerp(bgY[2], room_height, 0.03);
 draw_set_colour(c_white);
 draw_set_alpha(0.05);
-draw_rectangle(mx - bW*2.5, 0, mx + bW*2.5, bgY[2], false);
-draw_rectangle(mx - bW*2, 0, mx + bW*2, bgY[1], false);
-draw_rectangle(mx - bW*1.5, 0, mx + bW*1.5, bgY[0], false);
+draw_rectangle(mx - bW*2.5 - bgYInc2, 0, mx + bW*2.5 + bgYInc2, bgY[2], false);
+draw_rectangle(mx - bW*2 - bgYInc1, 0, mx + bW*2 + bgYInc1, bgY[1], false);
+draw_rectangle(mx - bW*1.5 - bgYInc0, 0, mx + bW*1.5 + bgYInc0, bgY[0], false);
 draw_set_alpha(0.25);
 draw_set_colour(global.colDarkestBlue);
-draw_roundrect(mx - bW, my[0] - pad/4, mx + bW, 
+draw_roundrect(mx - menuWidth, my[0] - pad/4, mx + menuWidth, 
                my[menuLength-1] + (menuLength-1)*height + pad*1.25, false);
                
 // Draw Menu Items

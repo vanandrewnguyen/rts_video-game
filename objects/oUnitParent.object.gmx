@@ -32,6 +32,10 @@ scrUnitInit(PLAYERINDEX, 3, 2, 0.25, 0.15, 2,
             96, 60, 8, 8, 1, sBullet, true, "parent");
 
 scrPurchaseShipFX(x, y);
+
+// Audio
+scrPlayAudio(oAudioCont.audioEmImpact, sndShipCreate, 
+             0.9, 1.1, 0.6, 0.7, x, y, 3);
 </string>
           </argument>
         </arguments>
@@ -61,10 +65,17 @@ scrShakeCam(2);
 scrCreateExplosion(x, y, sExplosionSquareBig, false, 
                    irandom_range(2,3), 32, 32, sExplosionSquareBig);
 scrCreateShipGib(x, y, 0.8, 0.05, 8, random_range(1,4), 0, 360);                   
+part_particles_create(global.pSysBackground, x, y, global.partAmbientSmokeOrange, 1);
                    
 if (unitType == "Kamikaze") {
     scrCreateExplosion(x, y, sExplosionColour, false, 0, 0, 0, 0);
 }
+
+// Audio
+scrPlayAudio(oAudioCont.audioEmExplosion, choose(sndShipExplode1, sndShipExplode2), 
+             0.9, 1.1, 0.6, 0.7, x, y, 3);
+
+
 </string>
           </argument>
         </arguments>

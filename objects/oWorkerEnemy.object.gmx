@@ -157,6 +157,10 @@ if (instance_exists(oStationEnemy)) {
                         atTarget = false;
                         moveTargetX = oStationEnemy.x;
                         moveTargetY = oStationEnemy.y;
+                        
+                        // Audio
+                        scrPlayAudio(oAudioCont.audioEmExplosion, sndMineSuccess, 
+                                     0.9, 1.1, 0.6, 0.7, x, y, 3);
                     } 
                 }
             } else {
@@ -176,8 +180,10 @@ if (global.difficulty &gt;= 3 &amp;&amp; hp &lt; maxHp) {
 }
 
 // Toggle Select
-if (mouse_check_button(mb_left)) {
-    scrToggleSelect(oMouse.px, oMouse.py, mouse_x, mouse_y);
+if (instance_exists(oMouse)) {
+    if (mouse_check_button(mb_left)) {
+        scrToggleSelect(oMouse.px, oMouse.py, mouse_x, mouse_y);
+    }
 }
 
 // Clamp within room bounds

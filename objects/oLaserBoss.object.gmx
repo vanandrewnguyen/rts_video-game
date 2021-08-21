@@ -28,16 +28,18 @@
             <string>///Init
 event_inherited();
 
-scrUnitInit(ENEMYINDEX, 6, 1.8, 0.2, 0.2, 4,
+scrUnitInit(ENEMYINDEX, 8, 1.8, 0.2, 0.2, 4,
             192, 120, 4, 0, 0.2, sBulletLaser, true, "laser");
 
+chaseRange = 256;
 var inst = instance_create(x, y, oTankShield);
 inst.owner = id;
+/*
 var inst = instance_create(x, y, oTankShield);
 inst.owner = id;
 inst.radiusOrigin = 48;
-chaseRange = 256;
-
+inst.arrayLen = 48;
+*/
 for (var i=0;i&lt;360;i += 60) {
     scrCreateBullet(teamIndex, x, y, i, bulletSpread,
                     bulletSpd, bulletDmg, sBulletEMP, sBulletDecay,

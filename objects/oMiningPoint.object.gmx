@@ -93,7 +93,9 @@ scrCreateExplosion(x, y, sExplosionColour, true,
                    irandom_range(4,6), 64, 64, sExplosionSquareBig);
 scrCreateShipGib(x, y, 0.8, 0.05, 8, random_range(1,4), 0, 360);                   
                    
-
+// Audio
+scrPlayAudio(oAudioCont.audioEmExplosion, sndMineDestroy, 
+             0.9, 1.1, 0.6, 0.7, x, y, 6);
 </string>
           </argument>
         </arguments>
@@ -216,8 +218,8 @@ for(var i=0;i&lt;asteroidNumber;i++) {
 }
 
 // Draw radius
-if (instance_exists(oUnitParent)) {
-    var inst = instance_nearest(x, y, oUnitParent);
+if (instance_exists(oEntityParent)) {
+    var inst = instance_nearest(x, y, oEntityParent);
     var dis = point_distance(x, y, inst.x, inst.y);
     if (dis &lt; sprite_width*1.5) { radAlphaTar = 0.75;
     } else { radAlphaTar = 0; }

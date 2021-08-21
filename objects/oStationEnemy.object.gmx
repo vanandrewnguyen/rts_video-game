@@ -103,8 +103,10 @@ scrUnitTakeDamage();
 scrReturnSquish(1, 0.1);
 
 // Toggle Select
-if (mouse_check_button(mb_left)) {
-    scrToggleSelect(oMouse.px, oMouse.py, mouse_x, mouse_y);
+if (instance_exists(oMouse)) {
+    if (mouse_check_button(mb_left)) {
+        scrToggleSelect(oMouse.px, oMouse.py, mouse_x, mouse_y);
+    }
 }
 
 // Money Add

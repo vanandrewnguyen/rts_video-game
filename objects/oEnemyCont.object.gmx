@@ -112,7 +112,13 @@ if (room == rmArenaBasicExt) {
 } else if (room == rmArenaDuoFlank) {
     global.difficulty = 4;
     global.currency = 50;
-} 
+} else if (room == rmArenaSandbox) {
+    global.currency = 1000;
+} else if (room == rmMainMenu) {
+    global.difficulty = -1;
+}
+
+
 </string>
           </argument>
         </arguments>

@@ -62,7 +62,7 @@ plot[5, 2] = "Stein";
 plot[6, 2] = "Sigma";
 plot[7, 2] = "Pegasi";
 // Set Destinations
-plot[0, 3] = noone;
+plot[0, 3] = rmMainMenu;
 plot[1, 3] = rmArenaBasic;
 plot[2, 3] = rmArenaBasicExt;
 plot[3, 3] = rmArenaDoublePass;
@@ -104,21 +104,37 @@ t = 0;
           <argument>
             <kind>1</kind>
             <string>///Movement
-if (mouse_wheel_up()) { plotIndex++; }
-if (mouse_wheel_down()) { plotIndex--; }
+if (mouse_wheel_up()) { 
+    // Audio
+    scrPlayAudio(oAudioCont.audioEmUI, sndButtonPress1, 
+                 0.9, 1.1, 0.9, 1.1, x, y, 3);
+    plotIndex++; 
+}
+if (mouse_wheel_down()) { 
+    // Audio
+    scrPlayAudio(oAudioCont.audioEmUI, sndButtonPress1, 
+                 0.9, 1.1, 0.9, 1.1, x, y, 3);
+    plotIndex--; 
+}
 plotIndex = clamp(plotIndex, 0, plotLength-1);
 
 if (mouse_check_button_pressed(mb_left)) {
     if (plot[plotIndex, 3] != noone) {
         room_goto(plot[plotIndex, 3]);
     }   
+    // Audio
+    scrPlayAudio(oAudioCont.audioEmUI, sndButtonPress1, 
+                 0.5, 0.6, 0.9, 1.1, x, y, 3);
 }
 
 drawAngle += sin(degtorad(drawAngleTar - drawAngle)) * 5;
 shipX = lerp(shipX, plot[plotIndex, 0], 0.2);
 shipY = lerp(shipY, plot[plotIndex, 1], 0.2);
 
-
+// BG
+background_alpha[1] = 0.75;
+background_alpha[2] = 0.25;
+background_alpha[3] = 0.5;
 </string>
           </argument>
         </arguments>

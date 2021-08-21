@@ -68,9 +68,15 @@ if (keyboard_check_pressed(vk_space)) {
     if (global.timeflow == 0) {
         if (timeFreezeLength &gt; 0) {
             global.timeflow = 1;
+            // Audio
+            scrPlayAudio(oAudioCont.audioEmUI, sndMineSuccess, 
+                        0.9, 1.1, 0.6, 0.7, oAudioCont.centerX, oAudioCont.centerY, 3);
         }
     } else {
         global.timeflow = 0;
+        // Audio
+        scrPlayAudio(oAudioCont.audioEmUI, sndMineSuccess, 
+                     0.9, 1.1, 0.6, 0.7, oAudioCont.centerX, oAudioCont.centerY, 3);
     }
 }
 

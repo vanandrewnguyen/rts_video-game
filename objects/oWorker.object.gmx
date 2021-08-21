@@ -113,6 +113,10 @@ if (global.timeflow == 1) {
                 } else {
                     inst.totalMines--;
                     state = "return";
+                    
+                    // Audio
+                    scrPlayAudio(oAudioCont.audioEmExplosion, sndMineSuccess, 
+                                 0.9, 1.1, 0.6, 0.7, x, y, 3);
                 } 
             }
         } else {

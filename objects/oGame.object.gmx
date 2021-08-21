@@ -77,11 +77,24 @@ global.colSatLightBlue = make_colour_rgb(107, 198, 220);
           <argument>
             <kind>1</kind>
             <string>/// Debug Commands
+/*
 if (keyboard_check_pressed(ord("R"))) {
     game_restart();
 }
 if (keyboard_check_pressed(ord("T"))) {
     global.currency += 500;
+}*/
+
+// Prev room
+if (keyboard_check_pressed(vk_escape)) {
+    if (room == rmArenaBasic || room == rmArenaBasicExt ||
+        room == rmArenaDoublePass || room == rmArenaMinimal ||
+        room == rmArenaDuo || room == rmArenaQuadFlank ||
+        room == rmArenaDuoFlank) {
+        room_goto(rmOverworldMenu);    
+    } else if (room == rmArenaSandbox) {
+        room_goto(rmMainMenu);
+    }
 }
 </string>
           </argument>
@@ -107,7 +120,7 @@ if (keyboard_check_pressed(ord("T"))) {
             <kind>1</kind>
             <string>///Create control objects
 
-if (room != rmOverworldMenu) {
+if (room != rmOverworldMenu &amp;&amp; room != rmMainMenu) {
     instance_create(0, 0, oTimeCont);
     instance_create(0, 0, oCamera);
     instance_create(0, 0, oMouse);
@@ -141,11 +154,10 @@ switch(room) {
           <argument>
             <kind>1</kind>
             <string>///Debug Draw
-/*
+
 draw_set_colour(c_white);
 draw_set_font(fntMed);
-draw_text(16, 16, "Currency: " + string(global.currency)); 
-draw_text(16, 32, "AI-Currency: " + string(global.enemyCurrency)); 
+//draw_text(16, 16, "FPS: " + string(fps));
 
 
 </string>

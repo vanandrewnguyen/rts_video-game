@@ -123,6 +123,11 @@ if (instance_exists(oBullet) &amp;&amp; instance_exists(owner)) {
                                       global.partShipEnemyTrail, 1);
             }
             
+            // Audio
+            scrPlayAudio(oAudioCont.audioEmImpact, sndShipHitShield, 
+                         0.9, 1.1, 0.6, 0.7, x, y, 6);
+            
+            // Destroy the Bullet
             if (inst.dmg &lt;= damageThreshold &amp;&amp; active) {
                 with(inst) { 
                     instance_destroy(); 

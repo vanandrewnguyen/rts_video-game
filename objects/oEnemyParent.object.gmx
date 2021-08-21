@@ -38,6 +38,10 @@ attackRange = 96;
 loadTime = 120;
 loadInt = 0;
 clusterTarget = noone;
+
+// Audio
+scrPlayAudio(oAudioCont.audioEmImpact, sndShipCreate, 
+             0.9, 1.1, 0.6, 0.7, x, y, 3);
 </string>
           </argument>
         </arguments>
@@ -67,10 +71,15 @@ scrShakeCam(2);
 scrCreateExplosion(x, y, sExplosionSquareBig, false, 
                    irandom_range(2,3), 32, 32, sExplosionSquareBig);
 scrCreateShipGib(x, y, 0.8, 0.05, 8, random_range(1,4), 0, 360); 
+part_particles_create(global.pSysBackground, x, y, global.partAmbientSmokePink, 1);
 
 if (unitType == "Kamikaze") {
     scrCreateExplosion(x, y, sExplosionColour, false, 0, 0, 0, 0);
 }       
+
+// Audio
+scrPlayAudio(oAudioCont.audioEmExplosion, choose(sndShipExplode1, sndShipExplode2), 
+             0.9, 1.1, 0.6, 0.7, x, y, 3);
 
 
 </string>
@@ -123,8 +132,10 @@ if (loadInt &lt; loadTime) {
 }
 
 // Toggle Select
-if (mouse_check_button(mb_left)) {
-    scrToggleSelect(oMouse.px, oMouse.py, mouse_x, mouse_y);
+if (instance_exists(oMouse)) {
+    if (mouse_check_button(mb_left)) {
+        scrToggleSelect(oMouse.px, oMouse.py, mouse_x, mouse_y);
+    }
 }
 
 // Clamp within room bounds
