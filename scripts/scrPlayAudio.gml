@@ -10,6 +10,9 @@ var sx = argument6;
 var sy = argument7;
 var priority = argument8;
 
+// If we can't play sounds then the rest of unneeded
+if (global.canPlayAudio == 0) { exit; }
+
 // Grab the final pitch and gain to pass to emitter
 // We base audio gain based on how close the sound source is to center within a radius
 var audioDistance = point_distance(oAudioCont.centerX, oAudioCont.centerY, sx, sy);
