@@ -34,16 +34,17 @@ global.pSysBelow = part_system_create();
 global.pSysBackground = part_system_create();
 
 part_system_depth(global.pSysMain, 0);
-part_system_depth(global.pSysAbove, -1);
-part_system_depth(global.pSysBelow, 1);
+part_system_depth(global.pSysAbove, -2);
+part_system_depth(global.pSysBelow, 2);
 part_system_depth(global.pSysBackground, 999);
 
-// FX Part
+// Declare FX Part
 scrInitPartShipTrail();
 scrInitPartShipEnemyTrail();
 scrInitPartBulletFire();
 scrInitShipShrapnel();
 scrInitPartDeathCurrency();
+scrInitPartConfetti();
 
 scrInitPartAmbientSmokePink(0);
 scrInitPartAmbientSmokeOrange(0);
@@ -97,7 +98,6 @@ if (room == rmArenaBasicExt) {
     scrInitPartAmbientSmokeOrange(1);
     scrInitPartAmbientTwinklingStars(1);
 }
-
 if (room == rmOverworldMenu) {
     scrInitPartAmbientSmokePink(1);
 } else if (room == rmMainMenu) {
@@ -156,7 +156,7 @@ if (part_emitter_exists(global.pSysBackground, global.partEmitterNebulaBlue)) {
     part_emitter_clear(global.pSysBackground, global.partEmitterNebulaBlue);
 }
 
-
+// Clean up surface
 if (surface_exists(lightSurf)) {
     surface_free(lightSurf);
 }
@@ -173,6 +173,7 @@ part_type_destroy(global.partAmbientSmokeBlue);
 part_type_destroy(global.partAmbientStars);
 part_type_destroy(global.partNebulaPurple);
 part_type_destroy(global.partNebulaBlue);
+part_type_destroy(global.partConfetti);
 
 // Systems
 part_system_destroy(global.pSysMain);
@@ -225,7 +226,7 @@ if (part_emitter_exists(global.pSysBackground, global.partEmitterNebulaBlue)) {
     part_emitter_clear(global.pSysBackground, global.partEmitterNebulaBlue);
 }
 
-
+// Clean up surface
 if (surface_exists(lightSurf)) {
     surface_free(lightSurf);
 }
@@ -242,6 +243,7 @@ part_type_destroy(global.partAmbientSmokeBlue);
 part_type_destroy(global.partAmbientStars);
 part_type_destroy(global.partNebulaPurple);
 part_type_destroy(global.partNebulaBlue);
+part_type_destroy(global.partConfetti);
 
 // Systems
 part_system_destroy(global.pSysMain);
@@ -301,17 +303,22 @@ if (surface_exists(lightSurf)) {
           <argument>
             <kind>1</kind>
             <string>///Surfaces
+
 if (!surface_exists(lightSurf)) {
+    // Create a new surf if old one is destroyed
     lightSurf = surface_create(room_width + buff*2, room_height + buff*2);
     surface_set_target(lightSurf);
     draw_clear_alpha(c_black, 0);
     surface_reset_target();
 } else {
+    // Draw light surface (draw a dark rectangle, then cut out gradient circles for sources)
     surface_set_target(lightSurf);
     draw_set_colour(global.colDarkestPurple);
     draw_rectangle(-buff, -buff, room_width + buff, room_height + buff, false);
     draw_set_colour(c_white);
     draw_set_blend_mode(bm_subtract);
+    
+    // Define sources and draw holes
     with(oBullet) {
         var lSize = 32+random_range(-4, 4);
         var offset = 96;
@@ -342,10 +349,6 @@ if (!surface_exists(lightSurf)) {
     }
     draw_set_blend_mode(bm_normal);
     surface_reset_target();
-}
-
-if keyboard_check_pressed(ord("H")) {
-    instance_create(mouse_x, mouse_y, oExplosion);
 }
 
 

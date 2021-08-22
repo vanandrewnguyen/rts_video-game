@@ -3,7 +3,7 @@
   <spriteName>&lt;undefined&gt;</spriteName>
   <solid>0</solid>
   <visible>-1</visible>
-  <depth>0</depth>
+  <depth>-1</depth>
   <persistent>0</persistent>
   <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
@@ -28,7 +28,7 @@
             <string>///Init
 global.difficulty = 3;
 timePassed = 0;
-timeWave = -60*8; //0;
+timeWave = -60*8;   // negative because we give the player 8 seconds offset at the start
 count = 0;
 
 /* Establish difficulty settings using a 2D array. 
@@ -118,6 +118,11 @@ if (room == rmArenaBasicExt) {
     global.difficulty = -1;
 }
 
+// Drawing Var
+stateAlpha = 0;
+stateAlphaTar = 0;
+
+
 
 </string>
           </argument>
@@ -148,9 +153,8 @@ if (global.timeflow == 1) {
 }
 
 var d = global.difficulty;
-
+// Exempt if it is already game over for the AI
 if (!instance_exists(oStationEnemy) || !instance_exists(oStation)) { exit; }
-
 
 // Execute waves
 if (timeWave &gt; (dif[d, 3]*60)) {
@@ -450,6 +454,81 @@ if (timeWave &gt; (dif[d, 3]*60)) {
       </action>
     </event>
     <event eventtype="8" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>///Draw Win/Fail State
+
+var titleTxt = "";
+var txt = "";
+
+stateAlpha = lerp(stateAlpha, stateAlphaTar, 0.1);
+winState = !instance_exists(oEnemyParent);
+failState = !instance_exists(oUnitParent);
+
+if ((winState &amp;&amp; !failState) || (!winState &amp;&amp; failState)) { stateAlphaTar = 1; }
+
+// Win State
+if (winState) {
+    titleTxt = "You won!";
+    txt = "Please press 'Escape' to return to the Overworld";
+    
+    // Confetti
+    if (scrChance(0.1)) {
+        var xx = random_range(view_xview, view_xview+view_wview);
+        var yy = random_range(view_yview, view_yview+view_hview);
+        part_particles_create(global.pSysAbove, xx, yy, 
+                              global.partConfetti, irandom_range(16, 24));
+        part_particles_create(global.pSysAbove, xx, yy, 
+                              global.partShipTrail, irandom_range(12, 16));
+    }
+}
+
+// Fail State
+if (failState) {
+    titleTxt = "Game Over!";
+    txt = "Please press 'R' to restart";
+}
+
+// Draw GUI for Win / Fail State
+var tx = view_xview+view_wview/2;
+var ty = view_yview+view_hview/2;
+
+draw_set_alpha(stateAlpha/2);
+draw_set_colour(global.colDarkBlue);
+draw_rectangle(view_xview, view_yview, view_xview+view_wview, view_yview+view_hview, false);
+draw_set_colour(c_white);
+draw_set_alpha(stateAlpha);
+draw_set_halign(fa_center);
+draw_set_valign(fa_middle);
+draw_set_font(fntBig);
+draw_text(tx, ty - 16, titleTxt);
+draw_set_font(fntMed);
+draw_text(tx, ty + 16, txt);
+draw_set_valign(fa_top);
+draw_set_halign(fa_left);
+draw_set_alpha(1.0);
+
+
+
+
+</string>
+          </argument>
+        </arguments>
+      </action>
       <action>
         <libid>1</libid>
         <id>603</id>

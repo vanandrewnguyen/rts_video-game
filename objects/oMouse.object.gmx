@@ -42,7 +42,6 @@ iconScale[0] = 1;
 iconScale[1] = 1;
 iconScale[2] = 1;
 iconScale[3] = 1;
-iconScale[4] = 1;
 
 
 
@@ -114,22 +113,7 @@ if (mouse_check_button_released(mb_left)) {
 if (keyboard_check_pressed(ord("1"))) { mouseMode = "target"; }
 if (keyboard_check_pressed(ord("2"))) { mouseMode = "targetLine"; }
 if (keyboard_check_pressed(ord("3"))) { mouseMode = "targetCircle"; }
-if (keyboard_check_pressed(ord("4"))) { mouseMode = "targetUnit"; }
-if (keyboard_check_pressed(ord("5"))) { mouseMode = "selfDestruct"; }
-
-// Debug
-
-if (mouse_check_button_pressed(mb_middle)) {
-    //scrCreateBullet(PLAYERINDEX,mouse_x,mouse_y,0,8,6,1,sBullet,sBulletDecay,-1,true);
-}   
-
-
-
-
-
-
-
-
+if (keyboard_check_pressed(ord("4"))) { mouseMode = "selfDestruct"; }
 
 
 
@@ -156,8 +140,11 @@ if (mouse_check_button_pressed(mb_middle)) {
           <argument>
             <kind>1</kind>
             <string>/// Draw Icons
-var maxIcon = 5;
+
+var maxIcon = 4;
 var iconWidth = 16;
+
+// Draw command icons
 for (var i=0;i&lt;maxIcon;i++) {
     var temp = 1;
     var width = 16;
@@ -210,6 +197,8 @@ draw_set_halign(fa_left);
           <argument>
             <kind>1</kind>
             <string>///Draw selection square
+
+// Draw bounding box
 if (px != -1 &amp;&amp; py != -1) {
     draw_set_alpha(0.1);
     draw_set_colour(c_white);
@@ -222,8 +211,7 @@ switch(mouseMode) {
     case "target": iconIndex = 0; break;
     case "targetLine": iconIndex = 1; break;
     case "targetCircle": iconIndex = 2; break;
-    case "targetUnit": iconIndex = 3; break;
-    case "selfDestruct": iconIndex = 4; break;
+    case "selfDestruct": iconIndex = 3; break;
 }
 
 draw_sprite(sprite_index, iconIndex, mouse_x, mouse_y);

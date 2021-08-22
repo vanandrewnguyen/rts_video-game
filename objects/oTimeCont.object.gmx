@@ -64,6 +64,7 @@ lineXTar = global.GUIWidth;
           <argument>
             <kind>1</kind>
             <string>///Pause time
+
 if (keyboard_check_pressed(vk_space)) {
     if (global.timeflow == 0) {
         if (timeFreezeLength &gt; 0) {
@@ -127,6 +128,7 @@ if (global.timeflow == 1) {
 draw_set_alpha(pauseAlpha/4);
 draw_set_colour(global.colDarkestBlue);
 draw_rectangle(0, 0, global.GUIWidth, global.GUIHeight, false);
+// Set grid end points
 draw_set_alpha(pauseAlpha/8);
 draw_set_colour(c_white);
 for (var xx=0;xx&lt;global.GUIWidth;xx+=gridSize) {
@@ -135,6 +137,7 @@ for (var xx=0;xx&lt;global.GUIWidth;xx+=gridSize) {
 for (var yy=0;yy&lt;global.GUIHeight;yy+=gridSize) {
     draw_line(0, yy, lineX+yy/8, yy);
 }
+// Draw grid
 draw_set_alpha(pauseAlpha/2);
 var width = 128;
 var pc = (timeFreezeLength/timeFreezeLengthTotal)*100;
@@ -173,6 +176,7 @@ draw_set_alpha(1);
           <argument>
             <kind>1</kind>
             <string>///Draw Glitch FX
+
 if (global.timeflow == 0) {
     with (oUnitParent) {
         draw_sprite_ext(sprite_index, image_index, x+random_range(-1,1), y+random_range(-1,1), 

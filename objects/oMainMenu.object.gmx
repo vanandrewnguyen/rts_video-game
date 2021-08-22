@@ -28,6 +28,7 @@
             <string>///Init
 
 state = 0; 
+screenSizeIndex = 0;
 
 // Array
 menuCursor = 0;
@@ -38,13 +39,13 @@ menuItem[3, 0] = "Credits";
 menuItem[4, 0] = "Exit";
 
 menuItem[0, 1] = "Back";
-menuItem[1, 1] = "Ambient";
+menuItem[1, 1] = "Options!";
 menuItem[2, 1] = "Sound Effects";
 menuItem[3, 1] = "Screen Size";
 menuItem[4, 1] = "Fullscreen";
 
 menuItem[0, 2] = "Back";
-menuItem[1, 2] = "Credits";
+menuItem[1, 2] = "Credits!";
 menuItem[2, 2] = "An game by Van Andrew";
 menuItem[3, 2] = "Sol System is open source!";
 menuItem[4, 2] = "github.com/vanandrewnguyen/rts_video-game";
@@ -123,7 +124,7 @@ if (keyboard_check_pressed(vk_space) || keyboard_check_pressed(vk_enter) ||
         case 0:
             if (state == 0) {
                 // Start Campaign
-                room_goto(rmOverworldMenu);
+                scrTransition(rmOverworldMenu, global.colDarkestBlue, true, sTransitionSquareTile);
             } else if (state == 1) {
                 // Return to main
                 state = 0;
@@ -138,7 +139,7 @@ if (keyboard_check_pressed(vk_space) || keyboard_check_pressed(vk_enter) ||
         case 1:
             if (state == 0) {
                 // Sandbox
-                room_goto(rmArenaSandbox);
+                scrTransition(rmArenaSandbox, global.colDarkestBlue, true, sTransitionSquareTile);
             } else if (state == 1) {
                 // Toggle ambient sound
             }
@@ -150,6 +151,17 @@ if (keyboard_check_pressed(vk_space) || keyboard_check_pressed(vk_enter) ||
                 menuCursor = 0;
             } else if (state == 1) {
                 // Toggle Sound effects
+                if (global.canPlayAudio == 1) {
+                    global.canPlayAudio = 0;
+                    ini_open("user_data.ini");
+                    ini_write_real("pref", "audio_sfx", global.canPlayAudio);
+                    ini_close();
+                } else {
+                    global.canPlayAudio = 1;
+                    ini_open("user_data.ini");
+                    ini_write_real("pref", "audio_sfx", global.canPlayAudio);
+                    ini_close();
+                }
             }
         break;
         case 3:
@@ -160,6 +172,19 @@ if (keyboard_check_pressed(vk_space) || keyboard_check_pressed(vk_enter) ||
                 menuWidthTar = 128;
             } else if (state == 1) {
                 // Toggle screen sizing
+                screenSizeIndex++;
+                if (screenSizeIndex &gt;= 3) { screenSizeIndex = 0; }
+                switch (screenSizeIndex) {
+                    case 0:
+                        window_set_size(1280, 720);
+                    break;
+                    case 1:
+                        window_set_size(1920, 1080);
+                    break;
+                    case 2:
+                        window_set_size(640, 360);
+                    break;
+                }
             }
         break;
         case 4:
@@ -168,6 +193,11 @@ if (keyboard_check_pressed(vk_space) || keyboard_check_pressed(vk_enter) ||
                 game_end();
             } else if (state == 1) {
                 // Toggle fullscreen
+                if (window_get_fullscreen()) {
+                    window_set_fullscreen(false);
+                } else {
+                   window_set_fullscreen(true);
+                }
             } else if (state == 2) {
                 url_open('https://github.com/vanandrewnguyen/rts_video-game');
             }
@@ -240,16 +270,24 @@ draw_roundrect(mx - menuWidth, my[0] - pad/4, mx + menuWidth,
                
 // Draw Menu Items
 draw_set_alpha(1.0);
-draw_set_colour(c_white);
 draw_set_font(fntMed);
 draw_set_halign(fa_center);
 
 for (var i=0;i&lt;menuLength;i++) {
+    draw_set_colour(c_white);
     var xx = mx;
     my[i] = lerp(my[i], myTar, 0.05 - i*0.005);
     var yy = my[i] + i*height;
+    // Exemptions
+    if (menuItem[i, state] == "Sound Effects") {
+        if (global.canPlayAudio == 0) {
+            draw_set_colour(global.colDarkPink);
+            draw_text(xx + string_width(menuItem[i, state])/2 + 6, yy, "x");
+        }
+    }
     // Draw Menu Text
     draw_text(xx, yy, menuItem[i, state]);
+    
     // Draw Menu Cursor
     cursorY = lerp(cursorY, my[menuCursor] + menuCursor*height, 0.05);
     if (i == menuCursor) {

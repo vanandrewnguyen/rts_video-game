@@ -62,7 +62,7 @@ plot[5, 2] = "Stein";
 plot[6, 2] = "Sigma";
 plot[7, 2] = "Pegasi";
 // Set Destinations
-plot[0, 3] = rmMainMenu;
+plot[0, 3] = rmTutorial;
 plot[1, 3] = rmArenaBasic;
 plot[2, 3] = rmArenaBasicExt;
 plot[3, 3] = rmArenaDoublePass;
@@ -120,7 +120,8 @@ plotIndex = clamp(plotIndex, 0, plotLength-1);
 
 if (mouse_check_button_pressed(mb_left)) {
     if (plot[plotIndex, 3] != noone) {
-        room_goto(plot[plotIndex, 3]);
+        //room_goto(plot[plotIndex, 3]);
+        scrTransition(plot[plotIndex, 3], global.colDarkPurple, true, sTransitionSquareTile);
     }   
     // Audio
     scrPlayAudio(oAudioCont.audioEmUI, sndButtonPress1, 
