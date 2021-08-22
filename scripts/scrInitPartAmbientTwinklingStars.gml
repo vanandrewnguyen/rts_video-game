@@ -1,4 +1,5 @@
 ///scrInitPartAmbientTwinklingStars(num);
+/* Initializes particle for ambient star background */
 
 global.partAmbientStars = part_type_create();
 global.partEmitterStars = part_emitter_create(global.pSysBackground);

@@ -1,4 +1,5 @@
 ///scrMouseSetMovement(mouseMode);
+/* Sets the basis for constructing how each command type is executed */
 
 // Check for mouse mode
 switch(argument0) {
@@ -42,16 +43,7 @@ switch(argument0) {
             }
         }
     break;
-    case "targetUnit": // Chase Target
-        var inst = instance_nearest(mouse_x, mouse_y, oEntityParent);
-        if (inst != -1) {
-            atTarget = false;
-            state = "move";
-            moveTargetX = inst.x;
-            moveTargetY = inst.y;
-        }
-    break;
-    case "selfDestruct": // Destroy Unit
+    case "selfDestruct": // Destroy Unit and return partial currency back
         var value = hp*5;
         var inst = instance_create(x, y, oShipDeathCurrencyParticle);
         inst.value = value;

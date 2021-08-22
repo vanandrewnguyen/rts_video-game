@@ -1,4 +1,5 @@
 ///scrInitPartAmbientSmokeOrange(num);
+/* Initializes particle for ambient orange smoke */
 
 global.partAmbientSmokeOrange = part_type_create();
 global.partEmitterSmokeOrange = part_emitter_create(global.pSysBackground);

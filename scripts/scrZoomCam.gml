@@ -1,5 +1,6 @@
 ///scrZoomCam(amount, view);
-// Applying zooming to the camera view port using scaling
+/* Applying zooming to the camera view port using scaling */
+
 var amount = 1 + argument0;
 var view = argument1;
 

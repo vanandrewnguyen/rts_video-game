@@ -1,5 +1,5 @@
 ///scrUnitIdle();
-// Idle state
+/* Idle state */
 
 // Set friction
 hsp = scrApproach(hsp,0,fric);

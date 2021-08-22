@@ -1,5 +1,6 @@
 ///scrEnemyAttack();
-// Attack state
+/* Attacking state of enemy unit */
+
 inCombat = true;
 
 // Set friction

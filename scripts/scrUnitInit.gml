@@ -1,5 +1,5 @@
 ///scrUnitInit(teamIndex, hp, max_speed, acc, fric, weight, attackRange, reloadTime, bSpread, bSpd, bDmg, bSprite, bTrail, unitType);
-// Initialise a new ship unit.
+/* Initialise a new ship unit. */
 
 var _index = argument0;
 var _hp = argument1;

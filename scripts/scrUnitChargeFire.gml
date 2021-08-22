@@ -1,4 +1,5 @@
 ///scrUnitChargeFire();
+/* Firing script used when units are within range to open fire */
 
 //Exemptions
 if (unitType == "worker") { exit; }
@@ -15,7 +16,7 @@ if (reloadTimeInt < reloadTimeTar) {
     scrCreateCasing(x, y, -bulletSpread*3, bulletSpread*3, bulletSpd/2, bulletSpd);
     reloadTimeInt = 0;
     
-    // Shotgun Blast
+    // Exemption: Shotgun Blast
     if (unitType == "bomber") {
         repeat(4) {
             scrCreateBullet(teamIndex, x, y, unitAngle, 32, 4, 
@@ -45,5 +46,4 @@ if (reloadTimeInt < reloadTimeTar) {
         case sBulletGravity: scrPlayAudio(oAudioCont.audioEmCombat, sndShipFireBoss, 0.9, 1.1, 
                                           0.7, 0.8, x, y, 5); break;
     }
-    
 }

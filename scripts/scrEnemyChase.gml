@@ -1,5 +1,5 @@
 ///scrEnemyChase();
-// Chase State
+/* Chasing state of enemy unit */
 
 // Detect Player Ships
 if (instance_exists(moveTarget)) {
@@ -13,6 +13,7 @@ if (instance_exists(moveTarget)) {
     
     if (moveTarget != clusterTarget) { 
         inCombat = true; 
+        
         // Check if within range
         if (dis < attackRange) {
             state = "attack";
@@ -32,6 +33,7 @@ if (instance_exists(moveTarget)) {
         if (instance_exists(oUnitParent)) {
             var inst = instance_nearest(x, y, oUnitParent);
             var dis = point_distance(x, y, inst.x, inst.y);
+            
             // Check if within range
             if (dis < chaseRange) {
                 atTarget = false;
@@ -48,3 +50,5 @@ if (instance_exists(moveTarget)) {
 // Clamp down maximum speeds
 hsp = clamp(hsp, -maxSpd, maxSpd);
 vsp = clamp(vsp, -maxSpd, maxSpd);
+
+

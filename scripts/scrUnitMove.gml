@@ -1,5 +1,5 @@
 ///scrUnitMove();
-// Move a unit using trig
+/* Move a unit using trig if not at target */
 
 // Move ship
 if (!atTarget) {

@@ -1,4 +1,6 @@
 ///scrSetEnemyClusterObj(x, y);
+/* Sets the cluster chances for each unit depending on difficulty */
+
 var currentCommand = "";
 
 switch(global.difficulty) {
@@ -45,9 +47,11 @@ switch(global.difficulty) {
 }
 
 
+// Use chance script to run through chances above in table
 for (var c=0;c<5;c++) {
     if (scrChance(command[c, 1])) { currentCommand = command[c, 0]; }
 }   
+
 // Check if it has bypassed all chances and remains blank
 if (currentCommand == "") {
     currentCommand = command[choose(1, 3, 5, 5), 0];

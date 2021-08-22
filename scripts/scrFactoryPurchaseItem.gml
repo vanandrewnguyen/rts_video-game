@@ -1,4 +1,5 @@
 ///scrFactoryPurchaseItem();
+/* Purchase Unit once called from Station object */
 
 var tempInst = -1;
 var instNum = instance_number(factoryBuildIndex[factoryAnimTar,4]);

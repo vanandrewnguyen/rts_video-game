@@ -1,9 +1,15 @@
 ///scrUnitTakeDamage();
+/* Executed when unit takes damage */
+
 if (global.timeflow == 0) { exit; }
 
+// Check if bullet exists and is within collision bounds
 if (instance_exists(oBullet)) {
     var inst = instance_place(x, y, oBullet);
+    
+    // If bullet exists and it belongs to another team
     if (inst != noone && inst.team != teamIndex) {
+        // Apply damage and stun effects
         hp -= inst.dmg;
         dmgFlashDraw = 1;
         alarm[1] = 5;
@@ -69,4 +75,6 @@ if (instance_exists(oBullet)) {
         }   
     }
 }
+
+// If hp is depleted, destroy unit
 if (hp <= 0) { instance_destroy(); }

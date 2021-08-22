@@ -1,9 +1,14 @@
 ///scrEnemyCharge();
+/* Used for enemy bomber ships. 
+Bombers can freeze and charge at a nearby player. */
+
 if (instance_exists(firingTarget)) {
     var dirF = point_direction(x, y, firingTarget.x, firingTarget.y);
+    
     unitAngle = dirF;
     moveTargetX = chargeX;
     moveTargetY = chargeY;
+    
     scrUnitChargeFire();
 }
 
@@ -12,6 +17,8 @@ var dir = point_direction(x, y, moveTargetX, moveTargetY);
 var dis = point_distance(x, y, moveTargetX, moveTargetY);
 hsp += lengthdir_x(acc*2, dir);
 vsp += lengthdir_y(acc*2, dir);
+
+// If at coord, slow down and switch to idle
 if (dis < sprite_width/2) {
     state = "idle";
     hsp /= 4;

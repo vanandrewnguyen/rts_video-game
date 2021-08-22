@@ -1,6 +1,7 @@
 ///scrCreateExplosion(x, y, sprite, produceMore, howMany, xRange, yRange, sprite2);
-// Create an explosion with a set sprite
+/* Create an explosion with a set sprite */
 
+// Grab arguments
 var xx = argument0;
 var yy = argument1;
 var sprite = argument2;
@@ -10,6 +11,7 @@ var xRange = argument5;
 var yRange = argument6
 var sprite2 = argument7;
 
+// Create instance and assign variables
 var inst = instance_create(xx, yy, oExplosion);
 inst.sprite_index = sprite;
 inst.createMore = producer;

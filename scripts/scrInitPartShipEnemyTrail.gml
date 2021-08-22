@@ -1,4 +1,5 @@
 ///scrInitPartShipEnemyTrail();
+/* Initializes particle for ship trail */
 
 global.partShipEnemyTrail = part_type_create();
 var pt = global.partShipEnemyTrail;

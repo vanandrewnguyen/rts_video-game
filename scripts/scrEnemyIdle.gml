@@ -1,4 +1,6 @@
 ///scrEnemyIdle();
+/* Idle state of enemy unit */
+
 // Idle state
 inCombat = false;
 

@@ -1,5 +1,5 @@
 ///scrApproach(a, b, amount);
-// Moves a to b by amount and returns result
+/* Moves a to b by amount and returns result */
 
 if (argument0 < argument1) {
     argument0 += argument2;

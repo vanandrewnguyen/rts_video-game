@@ -1,4 +1,6 @@
 ///scrInitShipShrapnel();
+/* Initializes particle for ship shrapnel */
+
 global.partShipShrapnel = part_type_create();
 var pt = global.partShipShrapnel;
 

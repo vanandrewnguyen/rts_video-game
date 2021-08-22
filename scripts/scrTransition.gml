@@ -1,4 +1,5 @@
 ///scrTransition(roomTarget, colour, drawPattern, sprite);
+/* Creates transition object which tranverses rooms */
 
 var inst = instance_create(0, 0, oTransitionFade);
 inst.col = argument1;

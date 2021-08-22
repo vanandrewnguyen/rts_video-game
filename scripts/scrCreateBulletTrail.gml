@@ -1,5 +1,5 @@
 ///scrCreateBulletTrail(x, y, xySpread, dir, spread);
-// Create a bullet trail particle
+/* Create a bullet trail particle */
 
 var xx = argument0;
 var yy = argument1;

@@ -1,4 +1,6 @@
 ///scrInitPartBulletFire();
+/* Initializes particle for bullet firing (complimenting shell casings) */
+
 global.partBulletFire = part_type_create();
 var pt = global.partBulletFire;
 

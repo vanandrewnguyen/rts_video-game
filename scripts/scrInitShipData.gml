@@ -1,26 +1,31 @@
 ///scrInitShipData();
+/* Stores unit data to be displayed and used when purchasing and displaying ships */
+
+// Current Ship on Display
 currentShipHp = 0;
 currentShipDmg = 0;
 currentShipSpd = 0;
 currentShipReload = 0;
 
+// Target value to lerp to
 currentShipHpTar = 0;
 currentShipDmgTar = 0;
 currentShipSpdTar = 0;
 currentShipReloadTar = 0;
 
+// Maximum values to compare current Ship to
 maxShipHp = 6;
 maxShipDmg = 3;
 maxShipSpd = 3;
 maxShipReload = 180;
 
 /*
-Stores all the information for ship creation (used to draw stats)
+2D Array stores all the information for ship creation (used to draw stats)
 [0,0] = hp;
 [0,1] = dmg;
 [0,2] = spd;
 [0,3] = reloadSpd;
-Worker Freighter Infantry Bomber Kamikaze Sniper Tank
+Worker / Freighter / Infantry / Bomber / Kamikaze / Sniper / Tank
 */
 
 shipData[0,0] = 3;

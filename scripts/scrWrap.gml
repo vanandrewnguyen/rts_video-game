@@ -1,5 +1,5 @@
 ///scrWrap(value, min, max);
-// Wraps value between min and max
+/* Wraps value between min and max */
 
 if (argument0 mod 1 == 0) {
     while (argument0 > argument2 || argument0 < argument1) {

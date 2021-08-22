@@ -1,5 +1,7 @@
 ///scrPlayAudio(emitter, sound, pitchMin, pitchMax, gainMin, gainMax, soundX, soundY, priority);
+/* Play game audio on a specified emitter */
 
+// Grab arguments
 var em = argument0;
 var soundID = argument1;
 var pitchMin = argument2;
@@ -28,3 +30,5 @@ if (audio_is_playing(soundID)) { finalGain *= 0.4; }
 audio_emitter_pitch(em, finalPitch);
 audio_emitter_gain(em, finalGain);
 audio_play_sound_on(em, soundID, false, priority);
+
+

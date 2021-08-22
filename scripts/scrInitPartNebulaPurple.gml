@@ -1,4 +1,6 @@
 ///scrInitPartNebulaPurple(num, x1, x2, y1, y2);
+/* Initializes particle for ambient concentrated purple smoke */
+
 var x1 = argument1;
 var x2 = argument2;
 var y1 = argument3;

@@ -1,6 +1,7 @@
 ///scrCreateBullet(teamIndex, x, y, dir, spread, spd, dmg, sprite, decaySprite, psIndex, trail);
-// Create a bullet with stats
+/* Create a bullet with stats */
 
+// Grab arguments
 var team = argument0;
 var xx = argument1;
 var yy = argument2;
@@ -13,6 +14,7 @@ var decaySprite = argument8;
 var particleIndex = argument9;
 var trail = argument10;
 
+// Create bullet instance and assign values
 var inst = instance_create(xx, yy, oBullet);
 var finalDir = dir + random_range(-spread, spread);
 inst.team = team;
@@ -24,7 +26,6 @@ inst.sprite_index = sprite;
 inst.decaySprite = decaySprite;
 inst.psIndex = particleIndex;
 inst.trail = trail;
-
 
 // Exemptions - Gravity Wave
 if (sprite == sBulletGravity) {

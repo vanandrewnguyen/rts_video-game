@@ -1,4 +1,8 @@
 ///scrCreateShipGib(x, y, spd, fric, rotSpd, num, angleMin, angleMax);
+/* Creates shrapnel from coord */
+
+
+// Grabs arguments
 var xx = argument0;
 var yy = argument1;
 var spd = argument2;

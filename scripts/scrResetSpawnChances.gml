@@ -1,4 +1,5 @@
 ///scrResetSpawnChances();
+/* Reset cluster spawn chances for each individual unit type */
 
 dif[0,5] = 0.2; //Worker / Freighter Ships
 dif[1,5] = 0.1; //Infantry / Bomber

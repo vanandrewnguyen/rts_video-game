@@ -1,4 +1,6 @@
 ///scrPurchaseShipFX(x, y);
+/* Creates ship purchasing effect as a small spark */
+
 var xx = argument0;
 var yy = argument1;
 

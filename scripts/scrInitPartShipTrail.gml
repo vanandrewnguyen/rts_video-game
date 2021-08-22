@@ -1,4 +1,5 @@
 ///scrInitPartShipTrail();
+/* Initializes particle for ship trail */
 
 global.partShipTrail = part_type_create();
 var pt = global.partShipTrail;

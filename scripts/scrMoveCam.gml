@@ -1,5 +1,5 @@
 ///scrMoveCam();
-// Move the camera
+/* Move the camera */
 
 // Get Input
 var kR = (keyboard_check(ord("D")) || keyboard_check(vk_right));
@@ -31,6 +31,7 @@ mag = lerp(mag, 0, magLerp);
 // Camera Lock
 if (instance_exists(oStation)) {
     if (oStation.state == "selected") {
+        // If a player base exists and is selected, we lock the camera coord and sizing
         camLock = true;
         camFrameWidth = camZoomMax * 0.5;
         view_xview[camIndex] = lerp(view_xview[camIndex], 

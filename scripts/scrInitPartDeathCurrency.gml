@@ -1,4 +1,5 @@
 ///scrInitPartDeathCurrency();
+/* Initializes particle for currency trail */
 
 global.partDeathCurrency = part_type_create();
 var pt = global.partDeathCurrency;

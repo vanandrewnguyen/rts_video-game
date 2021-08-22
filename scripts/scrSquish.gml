@@ -1,5 +1,5 @@
 ///scrSquish(xScale, yScale);
+/* Squish scale */
 
-// Squish 
 xScale += argument0;
 yScale += argument1;
